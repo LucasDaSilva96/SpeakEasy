@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -17,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import React from 'react';
 import { signInValidation } from '@/lib/validation/signIn.validation';
+import { motion } from 'framer-motion';
 
 export default function SignInForm() {
   // 1. Define your form.
@@ -35,29 +35,74 @@ export default function SignInForm() {
     console.log(values);
   }
   return (
-    <>
-      <h1>Sign in</h1>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.6 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      exit={{ opacity: 0, scale: 0.6 }}
+    >
+      <div className='flex-center-col pb-4'>
+        <h3 className='text-center py-2 font-semibold text-white text-lg'>
+          Welcome back
+        </h3>
+        <p className='text-white text-sm font-thin'>
+          Please enter your account details
+        </p>
+      </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='flex-center-col gap-6'
+        >
           <FormField
             control={form.control}
             name='email'
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
+              <FormItem className='flex flex-col text-white w-full'>
+                <FormLabel className='text-xs'>Email*</FormLabel>
                 <FormControl>
-                  <Input placeholder='shadcn' {...field} />
+                  <Input
+                    type='email'
+                    autoComplete='email'
+                    className='bg-black/75 transition-colors ease-in  focus:bg-black border-none'
+                    placeholder='example@io.com'
+                    {...field}
+                  />
                 </FormControl>
-                <FormDescription>
-                  This is your public display name.
+                <FormDescription className='hidden'>
+                  Sign in with your email and password
                 </FormDescription>
-                <FormMessage />
+                <FormMessage className='text-rose-600' />
               </FormItem>
             )}
           />
-          <Button type='submit'>Submit</Button>
+          {/*  */}
+          <FormField
+            control={form.control}
+            name='password'
+            render={({ field }) => (
+              <FormItem className='flex flex-col text-white w-full'>
+                <FormLabel className='text-xs'>Password*</FormLabel>
+                <FormControl>
+                  <Input
+                    type='password'
+                    autoComplete='current-password'
+                    className='bg-black/75 transition-colors ease-in  focus:bg-black border-none'
+                    placeholder='password'
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription className='hidden'>
+                  Sign in with your email and password
+                </FormDescription>
+                <FormMessage className='text-rose-600' />
+              </FormItem>
+            )}
+          />
+          {/*  */}
+          <Button type='submit'>Sign in</Button>
         </form>
       </Form>
-    </>
+    </motion.div>
   );
 }

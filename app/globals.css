@@ -64,6 +64,18 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden;
+  }
+}
+
+@layer components {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  .flex-center-col {
+    @apply flex flex-col items-center justify-center;
+  }
+  .glass {
+    @apply bg-black bg-opacity-[0.2] backdrop-blur-[5px];
   }
 }

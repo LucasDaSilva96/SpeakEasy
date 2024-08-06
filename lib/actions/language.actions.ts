@@ -1,25 +1,17 @@
 'use server';
-import languages from '@/data/languages.json';
 import { connectToDB } from '../mongoose';
 import Language from '../models/language';
+import { LanguageType } from '@/types/language.types';
+import { stringifyResponse } from '../stringifyResponse';
 
-export const uploadLanguage = async () => {
+export async function getAllLanguages() {
   try {
     await connectToDB();
-
-    const langs = await Language.find();
-
-    if (langs.length) {
-      return console.log('Languages already uploaded');
-    }
-
-    languages.forEach(async (lang) => {
-      const language = new Language(lang);
-
-      await language.save();
-    });
+    const languages = await Language.find();
+    const res = stringifyResponse(languages);
+    return res as LanguageType[];
   } catch (err) {
-    console.error(err);
-    throw new Error('Error uploading language');
+    console.log(err);
+    throw new Error('Could not fetch languages');
   }
-};
+}
