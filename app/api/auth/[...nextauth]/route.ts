@@ -1,6 +1,8 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { compare } from 'bcrypt';
+import { connectToDB } from '@/lib/mongoose';
+import { getUser } from '@/lib/actions/user.actions';
 
 const handler = NextAuth({
   session: {
@@ -16,7 +18,23 @@ const handler = NextAuth({
         if (!credentials?.email || !credentials?.password) {
           throw new Error('Missing credentials');
         }
+        await connectToDB();
+        const user = await getUser(credentials.email);
+
+        if (!user) {
+          return null;
+        }
+        const isValid = await compare(credentials.password, user.password);
+        if (!isValid) {
+          return null;
+        }
+        user.status = 'online';
+        await (user as any).save();
+
+        return { email: user.email, id: user._id };
       },
     }),
   ],
 });
+
+export { handler as GET, handler as POST };

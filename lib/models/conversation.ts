@@ -23,4 +23,3 @@ const Conversation =
   mongoose.model('Conversation', conversationSchema);
 
 export default Conversation;
-export type ConversationType = typeof Conversation;

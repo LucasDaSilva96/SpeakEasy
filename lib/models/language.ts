@@ -19,4 +19,3 @@ const Language =
   mongoose.models.Language || mongoose.model('Language', languageSchema);
 
 export default Language;
-export type LanguageType = typeof Language;
