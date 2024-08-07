@@ -12,19 +12,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 8,
     },
-    passwordConfirm: {
-      type: String,
-      required: true,
-      validate: {
-        validator: function (this: {
-          password: string;
-          passwordConfirm: string;
-        }) {
-          return this.password === this.passwordConfirm;
-        },
-        message: 'Passwords do not match',
-      },
-    },
+    passwordConfirm: String || null,
     firstName: {
       type: String,
       required: true,

@@ -14,3 +14,12 @@ export interface UserType {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface UserCreateType {
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  firstName: string;
+  lastName: string;
+  nativeLanguage: string;
+}

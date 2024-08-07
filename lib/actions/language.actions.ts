@@ -2,7 +2,7 @@
 import { connectToDB } from '../mongoose';
 import Language from '../models/language';
 import { LanguageType } from '@/types/language.types';
-import { stringifyResponse } from '../stringifyResponse';
+import { stringifyResponse } from '../response';
 
 export async function getAllLanguages() {
   try {
