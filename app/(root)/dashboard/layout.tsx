@@ -1,3 +1,4 @@
+import NextAuthProvider from '@/components/NextAuthProvider';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 
@@ -10,5 +11,9 @@ export default async function DashboardLayout({
   if (!session) {
     return redirect('/auth');
   }
-  return <section>{children}</section>;
+  return (
+    <section>
+      <NextAuthProvider session={session}>{children}</NextAuthProvider>
+    </section>
+  );
 }

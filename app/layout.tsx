@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: 'A chat app for everyone and from everywhere.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className={arimo.className}>
         <Toaster
-          position='top-center'
+          position='top-right'
           reverseOrder={false}
           gutter={8}
           containerClassName=''

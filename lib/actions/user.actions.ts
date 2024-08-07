@@ -7,6 +7,7 @@ import { connectToDB } from '../mongoose';
 
 // This function is used to get a user by email.
 export const getUser = async (email: string) => {
+  console.log('getUser✅✅✅');
   try {
     await connectToDB();
     const user = await User.findOne({ email });
@@ -15,7 +16,7 @@ export const getUser = async (email: string) => {
       throw new Error('User not found');
     }
 
-    return JSON.stringify(user);
+    return user;
   } catch (e: any) {
     console.error(e);
     throw new Error(e.message);

@@ -10,6 +10,9 @@ const handler = NextAuth({
   session: {
     strategy: 'jwt',
   },
+  pages: {
+    signIn: '/auth',
+  },
   providers: [
     CredentialsProvider({
       credentials: {
@@ -17,24 +20,11 @@ const handler = NextAuth({
         password: {},
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error('Missing credentials');
-        }
+        console.log('credentials', credentials);
         await connectToDB();
-        const res = await getUser(credentials.email);
-        const user = parseResponse<UserType>(res, {} as UserType);
-        if (!user) {
-          return null;
-        }
-
-        const isValid = await compare(credentials.password, user.password);
-        if (!isValid) {
-          return null;
-        }
-        user.status = 'online';
-        await (user as any).save();
-
-        return { email: user.email, id: user._id };
+        const user = await getUser(credentials!.email);
+        console.log('user', user);
+        return user;
       },
     }),
   ],

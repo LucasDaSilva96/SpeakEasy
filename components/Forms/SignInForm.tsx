@@ -1,5 +1,4 @@
 'use client';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -18,6 +17,8 @@ import React from 'react';
 import { signInValidation } from '@/lib/validation/signIn.validation';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+import { signIn } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 export default function SignInForm() {
   const [loading, setLoading] = React.useState(false);
@@ -32,10 +33,28 @@ export default function SignInForm() {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof signInValidation>) {
+  async function onSubmit(values: z.infer<typeof signInValidation>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    setLoading(true);
+    try {
+      const { email, password } = values;
+
+      const response: any = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (!response.ok) {
+        toast.error('Invalid credentials');
+      }
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e.message);
+    } finally {
+      setLoading(false);
+    }
   }
   return (
     <motion.div
