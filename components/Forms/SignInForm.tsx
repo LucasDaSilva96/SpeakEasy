@@ -47,12 +47,12 @@ export default function SignInForm() {
       });
 
       if (!response.ok) {
-        toast.error('Invalid credentials');
+        throw new Error(response.error);
       }
+      setLoading(false);
     } catch (e: any) {
       console.error(e);
       toast.error(e.message);
-    } finally {
       setLoading(false);
     }
   }

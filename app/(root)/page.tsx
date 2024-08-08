@@ -1,16 +1,15 @@
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
+import React from 'react';
 
-export default async function Default_Page() {
+export default async function Home_Page() {
   const session = await getServerSession();
 
   if (!session) {
     return redirect('/auth');
   }
 
-  if (session) {
-    return redirect('/dashboard');
-  }
+  console.log('session', session);
 
-  return null;
+  return <div>Hello</div>;
 }

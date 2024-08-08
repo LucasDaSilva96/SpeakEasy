@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Arimo } from 'next/font/google';
-import './globals.css';
+import '../globals.css';
 import { Toaster } from 'react-hot-toast';
 
 const arimo = Arimo({ subsets: ['latin'] });
