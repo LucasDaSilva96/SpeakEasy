@@ -64,6 +64,7 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
     setLoading(true);
     try {
       await createUser(values as UserCreateType);
+      // TODO: Every new user should be receive a welcome email.
       toast.success('User created successfully');
       setState('login');
     } catch (e: any) {
