@@ -19,6 +19,7 @@ import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 export default function SignInForm() {
   const [loading, setLoading] = React.useState(false);

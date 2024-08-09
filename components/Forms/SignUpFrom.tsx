@@ -64,7 +64,34 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
     setLoading(true);
     try {
       await createUser(values as UserCreateType);
-      // TODO: Every new user should be receive a welcome email.
+      // TODO: Every new user should  receive a welcome email.
+      const formData = new FormData();
+      formData.append('name', values.firstName + ' ' + values.lastName);
+      formData.append('access_key', process.env.NEXT_PUBLIC_WEB3_FORM_KEY!);
+      formData.append('subject', 'SpeakEasy - Welcome to the Community');
+      formData.append('from_name', 'SpeakEasy');
+      formData.append(
+        'message',
+        "🎉Welcome to SpeakEasy!🎉 We're excited to have you join our community. If you have any questions, feel free to reach out to us."
+      );
+      const object = Object.fromEntries(formData);
+      const json = JSON.stringify(object);
+
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: json,
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          'Something went wrong. Please try again or contact support'
+        );
+      }
+
       toast.success('User created successfully');
       setState('login');
     } catch (e: any) {
@@ -107,7 +134,7 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
                       type='text'
                       autoComplete='given-name'
                       className='bg-black/75 transition-colors ease-in  focus:bg-black border-none'
-                      placeholder='example@io.com'
+                      placeholder='John'
                       {...field}
                     />
                   </FormControl>
@@ -130,7 +157,7 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
                       type='text'
                       autoComplete='family-name'
                       className='bg-black/75 transition-colors ease-in  focus:bg-black border-none'
-                      placeholder='example@io.com'
+                      placeholder='Doe'
                       {...field}
                     />
                   </FormControl>

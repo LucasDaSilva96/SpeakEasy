@@ -97,6 +97,7 @@ export default function ForgotPasswordForm({ setState }: Props) {
             type='email'
             name='email'
             autoComplete='email'
+            placeholder='example@io.com'
             required
             className='bg-black/75 text-white border-none outline-none ring-0'
           />

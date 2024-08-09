@@ -1,4 +1,5 @@
 import User from '@/lib/models/user';
+import { connectToDB } from '@/lib/mongoose';
 import { compare } from 'bcrypt';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -15,6 +16,7 @@ const handler = NextAuth({
         if (!credentials || !credentials.email || !credentials.password) {
           throw new Error('Missing credentials');
         }
+        await connectToDB();
         const user = await User.findOne({
           email: credentials.email,
         });
