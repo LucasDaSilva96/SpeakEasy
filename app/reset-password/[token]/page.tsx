@@ -56,8 +56,6 @@ export default function Reset_Password_Page({
 
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
-  console.log('params', params.token);
-  console.log('email', email);
 
   if (!params.token || !email) {
     return (

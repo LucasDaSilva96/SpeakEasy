@@ -13,7 +13,7 @@ export default function Authentication_Page() {
   const session = useSession();
 
   if (session?.status === 'authenticated') {
-    return redirect('/');
+    return redirect('/dashboard');
   }
 
   return (

@@ -100,3 +100,21 @@ export const resetPassword = async (token: string, password: string) => {
     throw new Error(e.message);
   }
 };
+
+// This function is used to get all the conversations of a user.
+export const getUserConversations = async (email: string) => {
+  try {
+    await connectToDB();
+    const user = await User.findOne({ email })
+      .populate('conversationsIds')
+      .populate('messages');
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return stringifyResponse(user.conversations);
+  } catch (e: any) {
+    console.error(e);
+    throw new Error(e.message);
+  }
+};

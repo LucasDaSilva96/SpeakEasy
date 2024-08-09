@@ -1,0 +1,52 @@
+{
+  "users": [
+    {
+      "id": "3",
+      "email": "alexjohnson@example.com",
+      "password": "password123",
+      "passwordConfirm": "password123",
+      "firstName": "Alex",
+      "lastName": "Johnson",
+      "image": "/default-avatar.png",
+      "conversationsIds": ["conversation1", "conversation2"],
+      "resetToken": "",
+      "resetTokenExpires": "2022-01-01T00:00:00Z",
+      "nativeLanguage": "English",
+      "status": "online",
+      "createdAt": "2021-01-01T00:00:00Z",
+      "updatedAt": "2021-01-01T00:00:00Z"
+    },
+    {
+      "id": "4",
+      "email": "emilybrown@example.com",
+      "password": "password123",
+      "passwordConfirm": "password123",
+      "firstName": "Emily",
+      "lastName": "Brown",
+      "image": "/default-avatar.png",
+      "conversationsIds": ["conversation1", "conversation2"],
+      "resetToken": "",
+      "resetTokenExpires": "2022-01-01T00:00:00Z",
+      "nativeLanguage": "English",
+      "status": "Offline",
+      "createdAt": "2021-01-01T00:00:00Z",
+      "updatedAt": "2021-01-01T00:00:00Z"
+    },
+    {
+      "id": " 5",
+      "email": "michaelwilson@example.com",
+      "password": "password123",
+      "passwordConfirm": "password123",
+      "firstName": "Michael",
+      "lastName": "Wilson",
+      "image": "/default-avatar.png",
+      "conversationsIds": ["conversation1", "conversation2"],
+      "resetToken": "",
+      "resetTokenExpires": "2022-01-01T00:00:00Z",
+      "nativeLanguage": "English",
+      "status": "online",
+      "createdAt": "2021-01-01T00:00:00Z",
+      "updatedAt": "2021-01-01T00:00:00Z"
+    }
+  ]
+}
