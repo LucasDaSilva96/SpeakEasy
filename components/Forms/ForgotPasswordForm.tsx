@@ -33,6 +33,7 @@ export default function ForgotPasswordForm({ setState }: Props) {
       formData.append('name', user.firstName + ' ' + user.lastName);
       formData.append('access_key', process.env.NEXT_PUBLIC_WEB3_FORM_KEY!);
       formData.append('subject', 'SpeakEasy - Reset Password');
+      formData.append('email', user.email);
       formData.append('from_name', 'SpeakEasy');
       formData.append(
         'message',

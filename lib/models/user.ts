@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      default: '/default-avatar.jpg',
+      default: '/default-avatar.png',
     },
     conversationsIds: [
       {

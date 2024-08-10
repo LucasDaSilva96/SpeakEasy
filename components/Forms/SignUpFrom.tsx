@@ -70,6 +70,7 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
       formData.append('access_key', process.env.NEXT_PUBLIC_WEB3_FORM_KEY!);
       formData.append('subject', 'SpeakEasy - Welcome to the Community');
       formData.append('from_name', 'SpeakEasy');
+      formData.append('email', values.email);
       formData.append(
         'message',
         "🎉Welcome to SpeakEasy!🎉 We're excited to have you join our community. If you have any questions, feel free to reach out to us."

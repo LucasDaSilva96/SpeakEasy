@@ -106,13 +106,26 @@ export const getUserConversations = async (email: string) => {
   try {
     await connectToDB();
     const user = await User.findOne({ email })
-      .populate('conversationsIds')
-      .populate('messages');
+      .populate({
+        path: 'conversationsIds',
+        populate: [
+          {
+            path: 'messages',
+            model: 'Message',
+          },
+          {
+            path: 'users',
+            model: 'User',
+          },
+        ],
+      })
+      .exec();
+
     if (!user) {
       throw new Error('User not found');
     }
 
-    return stringifyResponse(user.conversations);
+    return stringifyResponse(user.conversationsIds);
   } catch (e: any) {
     console.error(e);
     throw new Error(e.message);
