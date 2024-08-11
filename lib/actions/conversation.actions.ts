@@ -4,6 +4,7 @@ import Conversation from '../models/conversation';
 import User from '../models/user';
 import { connectToDB } from '../mongoose';
 
+// This function is used to create a new conversation.
 export const createNewConversation = async (
   userId_1: string,
   userId_2: string
@@ -16,10 +17,18 @@ export const createNewConversation = async (
     if (!user_1 || !user_2) {
       throw new Error('User not found');
     }
-    const newConversation = new Conversation({
+    const conversation = await Conversation.findOne({
+      users: { $all: [user_1.id, user_2.id] },
+    });
+
+    if (conversation) {
+      return conversation.id as string;
+    }
+
+    const newConversation = await Conversation.create({
       users: [user_1.id, user_2.id],
     });
-    await newConversation.save();
+
     user_1.conversationsIds.push(newConversation.id);
     user_2.conversationsIds.push(newConversation.id);
     await user_1.save();

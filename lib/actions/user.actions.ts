@@ -1,9 +1,10 @@
 'use server';
+import { connectToDB } from '../mongoose';
+import User from '../models/user';
+import Conversation from '../models/conversation';
 import bcrypt from 'bcrypt';
 import { UserCreateType } from '@/types/user.types';
-import User from '../models/user';
 import { stringifyResponse } from '../response';
-import { connectToDB } from '../mongoose';
 import { tokenGenerator } from '../tokenGenerator';
 
 // This function is used to get a user by email.
@@ -105,21 +106,20 @@ export const resetPassword = async (token: string, password: string) => {
 export const getUserConversations = async (email: string) => {
   try {
     await connectToDB();
-    const user = await User.findOne({ email })
-      .populate({
-        path: 'conversationsIds',
-        populate: [
-          {
-            path: 'messages',
-            model: 'Message',
-          },
-          {
-            path: 'users',
-            model: 'User',
-          },
-        ],
-      })
-      .exec();
+
+    const user = await User.findOne({ email }).populate({
+      path: 'conversationsIds',
+      populate: [
+        {
+          path: 'messages',
+          model: 'Message',
+        },
+        {
+          path: 'users',
+          model: 'User',
+        },
+      ],
+    });
 
     if (!user) {
       throw new Error('User not found');

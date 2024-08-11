@@ -29,11 +29,10 @@ export default function UserConversationsContainer({
       const response = await getUserConversations(data.user.email);
       if (!response) return;
       const jsonObj = parseResponse(response, {} as any);
-      console.log('response', jsonObj);
       setConversations(jsonObj);
     })();
   }, [data]);
-  console.log(conversations[0]);
+
   return (
     <div className='w-full max-h-[50vh] flex flex-col gap-2 overscroll-y-auto'>
       {conversations.length > 0 &&
