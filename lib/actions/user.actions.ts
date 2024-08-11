@@ -1,11 +1,12 @@
 'use server';
 import { connectToDB } from '../mongoose';
-import User from '../models/user';
 import Conversation from '../models/conversation';
+import User from '../models/user';
 import bcrypt from 'bcrypt';
 import { UserCreateType } from '@/types/user.types';
 import { stringifyResponse } from '../response';
 import { tokenGenerator } from '../tokenGenerator';
+import Message from '../models/message';
 
 // This function is used to get a user by email.
 export const getUser = async (email: string) => {
@@ -109,10 +110,11 @@ export const getUserConversations = async (email: string) => {
 
     const user = await User.findOne({ email }).populate({
       path: 'conversationsIds',
+      model: Conversation,
       populate: [
         {
           path: 'messages',
-          model: 'Message',
+          model: Message,
         },
         {
           path: 'users',

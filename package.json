@@ -31,7 +31,7 @@
     "react-hook-form": "7.34.2",
     "react-hot-toast": "^2.4.1",
     "sharp": "^0.33.4",
-    "tailwind-merge": "^2.4.0",
+    "tailwind-merge": "^2.5.0",
     "tailwindcss-animate": "^1.0.7",
     "uploadthing": "^6.13.2",
     "uuid": "^10.0.0",

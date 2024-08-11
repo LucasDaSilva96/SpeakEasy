@@ -1,7 +1,7 @@
 'use client';
-
-import Image from 'next/image';
 import React from 'react';
+import AvatarCircles from './magicui/avatar-circles';
+import { motion } from 'framer-motion';
 
 interface UserCardProps {
   _id?: string;
@@ -16,37 +16,40 @@ interface UserCardProps {
 }
 
 export default function UserCard({
-  _id,
-  conversationsIds,
-  email,
-  firstName,
-  image,
-  lastName,
-  nativeLanguage,
-  status,
+  users,
   flex_row,
-}: UserCardProps) {
+}: {
+  users: UserCardProps[];
+  flex_row: boolean;
+}) {
   return (
-    <div className='min-w-20'>
-      <div className={!flex_row ? 'flex-center-col' : 'flex-center'}>
-        <div className='border-[1.5px] border-spacing-1 border-blue rounded-3xl'>
-          <Image
-            src={image}
-            alt={firstName + 'profile'}
-            width={50}
-            height={50}
-          />
-        </div>
-        <div className='flex items-center gap-1'>
-          {status === 'online' ? (
-            <div className='w-2 h-2 rounded-full bg-green-600 animate-pulse' />
-          ) : (
-            <div className='w-2 h-2 rounded-full bg-gray-300' />
-          )}
+    <motion.ul className='min-w-20 cursor-pointer max-w-[98dvw] flex items-center gap-2 overflow-x-auto px-4 overflow-y-hidden'>
+      {users.map((user, i) => (
+        <motion.li
+          key={i}
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, type: 'spring', delay: i * 0.2 }}
+          className={
+            !flex_row ? 'flex-center-col relative' : 'flex-center relative'
+          }
+        >
+          <motion.div whileTap={{ scale: 0.9 }} className='text-center'>
+            <AvatarCircles
+              avatarUrls={[user.image]}
+              className={`bg-slate-200/50 p-1 rounded-full border-2 ${
+                user.status === 'online'
+                  ? 'border-green-600/70'
+                  : 'border-gray-300/50'
+              }`}
+            />
 
-          <p className='font-extralight text-xs text-gray-500'>{firstName}</p>
-        </div>
-      </div>
-    </div>
+            <p className='font-extralight text-xs text-gray-500'>
+              {user.firstName}
+            </p>
+          </motion.div>
+        </motion.li>
+      ))}
+    </motion.ul>
   );
 }
