@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": "3",
+      "_id": "3",
       "email": "alexjohnson@example.com",
       "password": "password123",
       "passwordConfirm": "password123",
@@ -17,7 +17,7 @@
       "updatedAt": "2021-01-01T00:00:00Z"
     },
     {
-      "id": "4",
+      "_id": "4",
       "email": "emilybrown@example.com",
       "password": "password123",
       "passwordConfirm": "password123",
@@ -33,7 +33,7 @@
       "updatedAt": "2021-01-01T00:00:00Z"
     },
     {
-      "id": " 5",
+      "_id": " 5",
       "email": "michaelwilson@example.com",
       "password": "password123",
       "passwordConfirm": "password123",

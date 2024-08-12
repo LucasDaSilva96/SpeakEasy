@@ -6,8 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
 import { Label } from '../ui/label';
 import toast from 'react-hot-toast';
-import { generateToken, getUser } from '@/lib/actions/user.actions';
-import { parseResponse } from '@/lib/response';
+
 import { UserType } from '@/types/user.types';
 
 interface Props {
@@ -25,41 +24,8 @@ export default function ForgotPasswordForm({ setState }: Props) {
       if (!formRef.current) return;
       const formData = new FormData(formRef.current);
       const email = formData.get('email') as string;
-      const res = await generateToken(email);
-      const user = parseResponse(res, {} as UserType);
-      if (!user) {
-        throw new Error('The user does not exist in our database');
-      }
-      formData.append('name', user.firstName + ' ' + user.lastName);
-      formData.append('access_key', process.env.NEXT_PUBLIC_WEB3_FORM_KEY!);
-      formData.append('subject', 'SpeakEasy - Reset Password');
-      formData.append('email', user.email);
-      formData.append('from_name', 'SpeakEasy');
-      formData.append(
-        'message',
-        `Here is your password reset link: ${process.env
-          .NEXT_PUBLIC_HOST_URL!}/reset-password/${user.resetToken}?email=${
-          user.email
-        } .This link will expire in 15 minutes.`
-      );
 
-      const object = Object.fromEntries(formData);
-      const json = JSON.stringify(object);
-
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: json,
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          'Something went wrong. Please try again or contact support'
-        );
-      }
+      // TODO - Implement the password reset logic here
 
       setLoading(false);
       toast.success('Password reset link has been sent to your email');

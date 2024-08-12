@@ -5,16 +5,9 @@ import SignUpForm from '@/components/Forms/SignUpFrom';
 import WelcomeHeader from '@/components/WelcomeHeader';
 import { motion } from 'framer-motion';
 import ForgotPasswordForm from '@/components/Forms/ForgotPasswordForm';
-import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 
 export default function Authentication_Page() {
   const [state, setState] = React.useState('login');
-  const session = useSession();
-
-  if (session?.status === 'authenticated') {
-    return redirect('/dashboard');
-  }
 
   return (
     <section className='w-full min-h-screen bg-gradient-pattern flex-center-col gap-4 relative p-2'>

@@ -19,8 +19,6 @@ import { Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { resetPassword } from '@/lib/actions/user.actions';
-import { parseResponse } from '@/lib/response';
 
 const passwordSchema = z
   .object({
@@ -87,17 +85,7 @@ export default function Reset_Password_Page({
       if (values.password !== values.passwordConfirm)
         throw new Error('Passwords do not match');
       setLoading(true);
-      const { password } = values;
-      const res = await resetPassword(params.token, password);
-      const data = await parseResponse(res, {} as any);
-      if (!data) {
-        throw new Error(
-          'Something went wrong. Please try again or contact support'
-        );
-      }
-      setLoading(false);
-      toast.success('Password reset successfully');
-      return router.push('/auth');
+      // TODO: Implement the resetPassword function
     } catch (e: any) {
       console.error(e);
       toast.error(e.message);

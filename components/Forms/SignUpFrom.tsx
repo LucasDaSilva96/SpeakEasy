@@ -24,12 +24,10 @@ import { Input } from '@/components/ui/input';
 import React, { useEffect } from 'react';
 import { signUpValidation } from '@/lib/validation/singUp.validation';
 import { LanguageType } from '@/types/language.types';
-import { getAllLanguages } from '@/lib/actions/language.actions';
 import { Loader2 } from 'lucide-react';
-import { createUser } from '@/lib/actions/user.actions';
-import { UserCreateType, UserType } from '@/types/user.types';
-import { parseResponse } from '@/lib/response';
 import toast from 'react-hot-toast';
+import { signup } from '@/lib/actions/login.actions';
+import { getAvailableLanguages } from '@/lib/actions/languages.actions';
 
 interface SignUpFormProps {
   setState: (state: string) => void;
@@ -40,7 +38,7 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
   const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
-    getAllLanguages().then((res) => {
+    getAvailableLanguages().then((res) => {
       setLanguages(JSON.parse(res as any));
     });
   }, []);
@@ -63,37 +61,17 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
     // ✅ This will be type-safe and validated.
     setLoading(true);
     try {
-      await createUser(values as UserCreateType);
-      // TODO: Every new user should  receive a welcome email.
       const formData = new FormData();
-      formData.append('name', values.firstName + ' ' + values.lastName);
-      formData.append('access_key', process.env.NEXT_PUBLIC_WEB3_FORM_KEY!);
-      formData.append('subject', 'SpeakEasy - Welcome to the Community');
-      formData.append('from_name', 'SpeakEasy');
       formData.append('email', values.email);
-      formData.append(
-        'message',
-        "🎉Welcome to SpeakEasy!🎉 We're excited to have you join our community. If you have any questions, feel free to reach out to us."
-      );
-      const object = Object.fromEntries(formData);
-      const json = JSON.stringify(object);
+      formData.append('password', values.password);
+      formData.append('passwordConfirm', values.passwordConfirm);
+      formData.append('firstName', values.firstName);
+      formData.append('lastName', values.lastName);
+      formData.append('nativeLanguage', values.nativeLanguage);
 
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: json,
-      });
+      await signup(formData);
 
-      if (!response.ok) {
-        throw new Error(
-          'Something went wrong. Please try again or contact support'
-        );
-      }
-
-      toast.success('User created successfully');
+      toast.success('User created successfully. Please verify your email');
       setState('login');
     } catch (e: any) {
       console.error(e);

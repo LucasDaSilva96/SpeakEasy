@@ -17,9 +17,8 @@ import React from 'react';
 import { signInValidation } from '@/lib/validation/signIn.validation';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
-import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+import { login } from '@/lib/actions/login.actions';
 
 export default function SignInForm() {
   const [loading, setLoading] = React.useState(false);
@@ -40,16 +39,12 @@ export default function SignInForm() {
     setLoading(true);
     try {
       const { email, password } = values;
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
 
-      const response: any = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      });
+      await login(formData);
 
-      if (!response.ok) {
-        throw new Error(response.error);
-      }
       setLoading(false);
     } catch (e: any) {
       console.error(e);
