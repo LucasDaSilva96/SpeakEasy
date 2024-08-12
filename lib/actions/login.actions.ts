@@ -1,5 +1,5 @@
 'use server';
-// TODO Movi this to the API folder, and make it a server route.
+
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient_server } from '../supabase/server';

@@ -1,3 +1,4 @@
+// TODO Movi this to the API folder, and make it a server route.
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
