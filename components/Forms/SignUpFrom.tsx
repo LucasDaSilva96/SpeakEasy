@@ -39,9 +39,13 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
 
   useEffect(() => {
     getAvailableLanguages().then((res) => {
-      setLanguages(JSON.parse(res as any));
+      if (!res) return [];
+      const languages = JSON.parse(res as any);
+      setLanguages(languages);
     });
   }, []);
+
+  console.log(languages);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof signUpValidation>>({
@@ -189,11 +193,12 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className='bg-black/75 border-none text-white'>
-                      {languages?.map((lang) => (
-                        <SelectItem key={lang._id} value={lang.language}>
-                          {lang.name}
-                        </SelectItem>
-                      ))}
+                      {languages.length > 0 &&
+                        languages.map((lang) => (
+                          <SelectItem key={lang._id} value={lang.language}>
+                            {lang.name}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                   <FormDescription className='hidden'>

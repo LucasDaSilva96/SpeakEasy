@@ -6,8 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
 import { Label } from '../ui/label';
 import toast from 'react-hot-toast';
-
-import { UserType } from '@/types/user.types';
+import { generateResetPasswordLinkToEmail } from '@/lib/actions/login.actions';
 
 interface Props {
   setState: (state: string) => void;
@@ -19,14 +18,13 @@ export default function ForgotPasswordForm({ setState }: Props) {
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setLoading(true);
     try {
       if (!formRef.current) return;
+      setLoading(true);
       const formData = new FormData(formRef.current);
       const email = formData.get('email') as string;
-
-      // TODO - Implement the password reset logic here
-
+      if (!email) throw new Error('Email is required');
+      await generateResetPasswordLinkToEmail(email);
       setLoading(false);
       toast.success('Password reset link has been sent to your email');
       formRef.current.reset();

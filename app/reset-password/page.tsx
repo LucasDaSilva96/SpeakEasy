@@ -19,6 +19,7 @@ import { Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { resetPassword } from '@/lib/actions/login.actions';
 
 const passwordSchema = z
   .object({
@@ -35,11 +36,7 @@ const passwordSchema = z
     }
   });
 
-export default function Reset_Password_Page({
-  params,
-}: {
-  params: { token: string };
-}) {
+export default function Reset_Password_Page() {
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
 
@@ -53,39 +50,20 @@ export default function Reset_Password_Page({
   });
 
   const searchParams = useSearchParams();
-  const email = searchParams.get('email');
-
-  if (!params.token || !email) {
-    return (
-      <section className='w-full min-h-screen bg-gradient-pattern flex-center'>
-        <div className='flex-center-col gap-4'>
-          <h1 className='text-3xl font-bold text-white'>Incorrect URL</h1>
-          <p className='text-lg text-white'>
-            The URL you are trying to access is incorrect.
-            <br /> Please try again.
-          </p>
-          <Link
-            className='py-2 px-4 bg-black rounded-md text-white'
-            href={'/auth'}
-          >
-            Back
-          </Link>
-        </div>
-      </section>
-    );
-  }
+  const code = searchParams.get('code') as string;
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof passwordSchema>) {
     try {
-      if (!params.token) throw new Error('Token is required');
-      if (!email) throw new Error('Email is required');
       if (!values.password || !values.passwordConfirm)
         throw new Error('Password is required');
       if (values.password !== values.passwordConfirm)
         throw new Error('Passwords do not match');
       setLoading(true);
-      // TODO: Implement the resetPassword function
+
+      await resetPassword(values.password, code);
+      setLoading(false);
+      toast.success('Password reset successfully');
     } catch (e: any) {
       console.error(e);
       toast.error(e.message);

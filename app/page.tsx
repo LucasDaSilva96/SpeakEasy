@@ -1,14 +1,14 @@
-
 import { createClient_server } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 
 export default async function Root_Page() {
-  const supabase = createClient_server() as any;
+  const supabase = await createClient_server();
 
   const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
-    return redirect('/auth');
-  } else {
+
+  if (data) {
     return redirect('/dashboard');
+  } else {
+    return redirect('/auth');
   }
 }

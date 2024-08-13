@@ -1,8 +1,10 @@
-// TODO Movi this to the API folder, and make it a server route.
+'use server';
+
+// TODO Move this to the API folder, and make it a server route.
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
-export function createClient_server() {
+export async function createClient_server() {
   const cookieStore = cookies();
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
