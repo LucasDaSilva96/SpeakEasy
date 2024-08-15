@@ -1,18 +1,23 @@
 export interface UserType {
-  _id: string;
+  id: string;
   email: string;
-  password: string;
-  passwordConfirm: string;
-  firstName: string;
-  lastName: string;
-  image: string;
-  conversationsIds: string[];
-  resetToken: string;
-  resetTokenExpires: Date;
-  nativeLanguage: string;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
+  first_name: string;
+  last_name: string;
+  native_language: string;
+  conversations: string[];
+  status: boolean;
+  image: string | null;
+  friends: UserFriendType[];
+}
+
+export interface UserFriendType {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  native_language: string;
+  status: boolean;
+  image: string | null;
 }
 
 export interface UserCreateType {

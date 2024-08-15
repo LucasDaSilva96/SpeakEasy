@@ -45,8 +45,6 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
     });
   }, []);
 
-  console.log(languages);
-
   // 1. Define your form.
   const form = useForm<z.infer<typeof signUpValidation>>({
     resolver: zodResolver(signUpValidation),

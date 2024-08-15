@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Toaster } from 'react-hot-toast';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getLoggedInUser } from '@/lib/actions/login.actions';
 
 export const metadata: Metadata = {
   title: 'SpeakEasy - Chat App',
@@ -14,6 +15,7 @@ export default async function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getLoggedInUser();
   return (
     <>
       <Toaster
@@ -48,8 +50,8 @@ export default async function DashboardLayout({
           },
         }}
       />
-      <div className='w-full min-h-screen flex flex-col'>
-        <Header />
+      <div className='w-full min-h-screen flex flex-col relative'>
+        <Header user={user} />
         {children}
         <Footer />
       </div>

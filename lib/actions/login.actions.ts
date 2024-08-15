@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient_server } from '../supabase/server';
+import { UserType } from '@/types/user.types';
 
 // Login
 export async function login(formData: FormData) {
@@ -15,7 +16,11 @@ export async function login(formData: FormData) {
     password: formData.get('password') as string,
   };
 
-  const { error } = await supabase.auth.signInWithPassword(data);
+  const { error, data: userData } = await supabase.auth.signInWithPassword(
+    data
+  );
+
+  await supabase.from('users').update({ status: true }).eq('email', data.email);
 
   if (error) throw new Error(error.message!);
 
@@ -38,7 +43,25 @@ export async function signup(formData: FormData) {
     nativeLanguage: formData.get('nativeLanguage') as string,
   };
   try {
-    await supabase.auth.signUp(data);
+    const { data: res, error } = await supabase.auth.signUp(data);
+    if (error) throw new Error(error.message);
+    const { user } = res;
+
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .insert([
+        {
+          email: user?.email,
+          first_name: data.firstName,
+          last_name: data.lastName,
+          native_language: data.nativeLanguage,
+          conversations: [],
+          friends: [],
+        },
+      ]);
+    if (userError) throw new Error(userError.message);
+
+    console.log(userData);
     revalidatePath('/', 'layout');
   } catch (error) {
     console.log(error);
@@ -50,6 +73,13 @@ export async function signup(formData: FormData) {
 export async function logout() {
   try {
     const supabase = await createClient_server();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    await supabase
+      .from('users')
+      .update({ status: false })
+      .eq('email', user?.email);
     await supabase.auth.signOut();
     revalidatePath('/', 'layout');
   } catch (e) {
@@ -94,4 +124,22 @@ export const resetPassword = async (password: string, code: string) => {
     throw new Error(e.message);
   }
   return redirect('/auth');
+};
+
+export const getLoggedInUser = async () => {
+  try {
+    const supabase = await createClient_server();
+    const { data, error } = await supabase.auth.getUser();
+    if (error) throw new Error(error.message);
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', data?.user?.email)
+      .single();
+    if (userError) throw new Error(userError.message);
+    return userData as UserType;
+  } catch (e: any) {
+    console.error(e);
+    throw new Error(e.message);
+  }
 };

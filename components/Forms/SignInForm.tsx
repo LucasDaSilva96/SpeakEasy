@@ -123,7 +123,7 @@ export default function SignInForm() {
             className='flex items-center gap-1'
             type='submit'
           >
-            <p>Sign up</p>
+            <p>Login</p>
             {loading && (
               <span>
                 <Loader2 size={16} className='animate-spin' />
