@@ -1,8 +1,7 @@
 import React from 'react';
-import user from '@/data/users.json';
-
 import UserConversationsContainer from '@/components/UserConversationsContainer';
 import { getUserFriends } from '@/lib/actions/user.actions';
+import UserCard from '@/components/UserCard';
 
 export default async function Dashboard() {
   const friends = await getUserFriends();
@@ -13,7 +12,7 @@ export default async function Dashboard() {
         className='bg-slate-300  rounded-md py-1 px-1 mt-2'
         placeholder='Search your chat'
       />
-      <h1 className='font-semibold'>Friends ({user.users.length})</h1>
+      <h1 className='font-semibold'>Friends ({friends.length})</h1>
 
       <UserCard users={friends} flex_row={false} />
 

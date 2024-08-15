@@ -12,6 +12,7 @@ export default function UserCard({
   users: UserFriendType[] | [];
   flex_row: boolean;
 }) {
+  if (users.length === 0) return null;
   return (
     <motion.ul className='min-w-20 max-w-[98dvw] flex items-center gap-2 overflow-x-auto px-4 overflow-y-hidden'>
       {users.map((user, i) => (
