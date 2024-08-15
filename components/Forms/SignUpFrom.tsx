@@ -181,7 +181,7 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
               control={form.control}
               name='nativeLanguage'
               render={({ field }) => (
-                <FormItem className='flex flex-col gap-0.5 text-white w-full'>
+                <FormItem className='flex flex-col gap-0.5 text-white w-full relative'>
                   <FormLabel>Native Language*</FormLabel>
                   <Select
                     onValueChange={field.onChange}
@@ -192,7 +192,7 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
                         <SelectValue placeholder='Select language' />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className='bg-black/75 border-none text-white'>
+                    <SelectContent className='bg-black/75 border-none text-white max-h-[45vh]'>
                       {languages.length > 0 &&
                         languages.map((lang) => (
                           <SelectItem key={lang._id} value={lang.language}>
