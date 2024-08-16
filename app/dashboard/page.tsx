@@ -5,6 +5,7 @@ import UserCard from '@/components/UserCard';
 
 export default async function Dashboard() {
   const friends = await getUserFriends();
+
   return (
     <section className='w-full px-2 flex flex-col gap-2 pt-2'>
       <input

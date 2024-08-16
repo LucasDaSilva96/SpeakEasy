@@ -7,7 +7,7 @@ export interface UserType {
   conversations: string[];
   status: boolean;
   image: string | null;
-  friends: UserFriendType[];
+  friends: string[];
 }
 
 export interface UserFriendType {

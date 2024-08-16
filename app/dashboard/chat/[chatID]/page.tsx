@@ -1,15 +1,30 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import AvatarCircles from '@/components/magicui/avatar-circles';
 import WritingAnimation from '@/components/WritingAnimation';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { UserFriendType } from '@/types/user.types';
+import { getUser } from '@/lib/actions/user.actions';
+import toast from 'react-hot-toast';
 
 export default function Chat_Page({ params }: { params: { chatID: string } }) {
   const id = params.chatID;
   const [isTyping, setIsTyping] = React.useState(false);
   const [isOnline, setIsOnline] = React.useState(true);
+  const [friend, setFriend] = React.useState<UserFriendType | null>(null);
+
+  useEffect(() => {
+    getUser(id)
+      .then((data) => {
+        setFriend(data);
+      })
+      .catch((e: any) => {
+        console.error(e);
+        toast.error(e.message);
+      });
+  }, [id]);
 
   return (
     <section className='w-full p-2 relative flex flex-col'>
