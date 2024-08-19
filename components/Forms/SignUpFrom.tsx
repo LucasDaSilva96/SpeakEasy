@@ -193,7 +193,7 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
                     <SelectContent className='bg-black/75 border-none text-white max-h-[45vh]'>
                       {languages.length > 0 &&
                         languages.map((lang) => (
-                          <SelectItem key={lang._id} value={lang.language}>
+                          <SelectItem key={lang._id} value={lang._id}>
                             {lang.name}
                           </SelectItem>
                         ))}

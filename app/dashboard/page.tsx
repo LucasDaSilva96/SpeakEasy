@@ -11,7 +11,7 @@ export default async function Dashboard() {
       <input
         type='text'
         className='bg-slate-300  rounded-md py-1 px-1 mt-2'
-        placeholder='Search your chat'
+        placeholder='Find friend'
       />
       <h1 className='font-semibold'>Friends ({friends.length})</h1>
 

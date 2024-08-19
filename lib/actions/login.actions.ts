@@ -43,25 +43,21 @@ export async function signup(formData: FormData) {
     nativeLanguage: formData.get('nativeLanguage') as string,
   };
   try {
-    const { data: res, error } = await supabase.auth.signUp(data);
-    if (error) throw new Error(error.message);
-    const { user } = res;
-
     const { data: userData, error: userError } = await supabase
       .from('users')
       .insert([
         {
-          email: user?.email,
+          email: data.email,
           first_name: data.firstName,
           last_name: data.lastName,
           native_language: data.nativeLanguage,
-          conversations: [],
-          friends: [],
         },
       ]);
     if (userError) throw new Error(userError.message);
 
-    console.log(userData);
+    const { data: res, error } = await supabase.auth.signUp(data);
+    if (error) throw new Error(error.message);
+
     revalidatePath('/', 'layout');
   } catch (error) {
     console.log(error);
@@ -137,6 +133,7 @@ export const getLoggedInUser = async () => {
       .eq('email', data?.user?.email)
       .single();
     if (userError) throw new Error(userError.message);
+    if (!userData) throw new Error('User not found');
     return userData as UserType;
   } catch (e: any) {
     console.error(e);
