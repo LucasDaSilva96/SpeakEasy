@@ -7,6 +7,7 @@ import { Loader2Icon, LogOutIcon } from 'lucide-react';
 import { logout } from '@/lib/actions/login.actions';
 import toast from 'react-hot-toast';
 import { UserType } from '@/types/user.types';
+import NotificationHeader from './NotificationHeader';
 
 export default function Header({ user }: { user: UserType | null }) {
   const [loading, setLoading] = React.useState(false);
@@ -38,18 +39,21 @@ export default function Header({ user }: { user: UserType | null }) {
           </p>
         </div>
       </aside>
-      <Button
-        disabled={loading}
-        className='bg-blue flex-center gap-1'
-        onClick={handleLogout}
-      >
-        <span className='hidden md:inline'>Logout</span>
-        {loading ? (
-          <Loader2Icon size={18} className='animate-spin text-white' />
-        ) : (
-          <LogOutIcon size={18} />
-        )}
-      </Button>
+      <div className='flex-center gap-10'>
+        <NotificationHeader />
+        <Button
+          disabled={loading}
+          className='bg-blue flex-center gap-1'
+          onClick={handleLogout}
+        >
+          <span className='hidden md:inline'>Logout</span>
+          {loading ? (
+            <Loader2Icon size={18} className='animate-spin text-white' />
+          ) : (
+            <LogOutIcon size={18} />
+          )}
+        </Button>
+      </div>
     </header>
   );
 }

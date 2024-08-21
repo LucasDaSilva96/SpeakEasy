@@ -2,6 +2,7 @@
 import { UserFriendType, UserType } from '@/types/user.types';
 import { createClient_server } from '../supabase/server';
 import { getLoggedInUser } from './login.actions';
+import { revalidatePath } from 'next/cache';
 
 export const getUser = async (id: string) => {
   try {
@@ -37,19 +38,23 @@ export const getUserFriends = async () => {
     const supabase = await createClient_server();
     const { data: friends, error } = await supabase
       .from('friendships')
-      .select('friend_id')
-      .eq('user_id', user.id)
-      .eq('status', 'accepted');
+      .select('*')
+      .or(
+        `and(user_id.eq.${user.id},status.eq.accepted),or(friend_id.eq.${user.id},status.eq.accepted)`
+      );
 
     if (error) throw new Error(error.message);
 
     if (!friends || !friends.length) return [];
 
-    const friendsIds = friends.map((friend) => friend.friend_id as string);
-    const { data: users, error: userError } = await supabase
+    const friendsIds = friends.map((friend) => {
+      if (friend.user_id === user.id) return friend.friend_id;
+      return friend.user_id;
+    });
+    const { data: users, error: userError } = (await supabase
       .from('users')
       .select('*')
-      .in('id', friendsIds);
+      .in('id', friendsIds)) as { data: UserType[]; error: any };
 
     if (userError) throw new Error(userError.message);
 
@@ -92,6 +97,8 @@ export const addFriend = async (friendId: string) => {
 
     if (error) throw new Error(error.message);
 
+    revalidatePath('/dashboard/addNewFriend', 'layout');
+
     return data;
   } catch (e: any) {
     console.error(e);
@@ -109,8 +116,11 @@ export const searchUsers = async (name: string) => {
       .from('friendships')
       .select('friend_id')
       .eq('user_id', user.id)
-      .eq('status', 'accepted');
+      .or(
+        `and(user_id.eq.${user.id},status.eq.pending), and(user_id.eq.${user.id},status.eq.accepted)`
+      );
 
+    console.log(friendsData);
     const { data: friendsDataReverse, error: friendsErrorReverse } =
       await supabase
         .from('friendships')
@@ -136,6 +146,55 @@ export const searchUsers = async (name: string) => {
 
     if (error) throw new Error(error.message);
     return (data as UserType[]) || [];
+  } catch (e: any) {
+    console.error(e);
+    throw new Error(e.message);
+  }
+};
+
+export const getFriendRequests = async () => {
+  try {
+    const user = await getLoggedInUser();
+    const supabase = await createClient_server();
+    const { data, error } = await supabase
+      .from('friendships')
+      .select('friend_id')
+      .eq('user_id', user.id)
+      .eq('status', 'pending');
+
+    if (error) throw new Error(error.message);
+    if (!data || !data.length) return [];
+
+    const friendIds = data.map((f) => f.friend_id);
+    const { data: users, error: userError } = await supabase
+      .from('users')
+      .select('*')
+      .in('id', friendIds);
+
+    if (userError) throw new Error(userError.message);
+
+    return users as UserType[];
+  } catch (e: any) {
+    console.error(e);
+    throw new Error(e.message);
+  }
+};
+
+export const acceptFriendRequest = async (friendId: string, status: string) => {
+  try {
+    const user = await getLoggedInUser();
+    const supabase = await createClient_server();
+    const { data, error } = await supabase
+      .from('friendships')
+      .update({ status: status })
+      .eq('user_id', user.id)
+      .eq('friend_id', friendId);
+
+    if (error) throw new Error(error.message);
+
+    revalidatePath('/dashboard', 'layout');
+
+    return data;
   } catch (e: any) {
     console.error(e);
     throw new Error(e.message);
