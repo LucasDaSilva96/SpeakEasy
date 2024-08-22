@@ -5,10 +5,12 @@ import WritingAnimation from '@/components/WritingAnimation';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { UserFriendType, UserType } from '@/types/user.types';
-import { getUser } from '@/lib/actions/user.actions';
 import toast from 'react-hot-toast';
 import { RealtimeChannel, User } from '@supabase/supabase-js';
 import { createClient_browser } from '@/lib/supabase/client';
+import { UserMinus } from 'lucide-react';
+import { TooltipComponent } from './ToolTipComponent';
+import { removeFriend } from '@/lib/actions/user.actions';
 
 interface ChatProps {
   id: string;
@@ -23,6 +25,7 @@ export default function Chat({ id, friend, user }: ChatProps) {
   const [messages, setMessages] = useState<any[]>([]);
   const message = useRef<HTMLTextAreaElement | null>(null);
   const channel = useRef<RealtimeChannel | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!channel.current) {
@@ -44,7 +47,20 @@ export default function Chat({ id, friend, user }: ChatProps) {
     return () => {
       if (channel.current) supabase.removeChannel(channel.current!);
     };
-  }, [id]);
+  }, [id, user.id]);
+
+  async function deleteFriend() {
+    try {
+      setLoading(true);
+      await removeFriend(friend.id);
+      setLoading(false);
+      toast.success('Friend removed successfully');
+    } catch (e: any) {
+      setLoading(false);
+      console.error(e);
+      toast.error(e.message);
+    }
+  }
 
   function onSend() {
     if (!channel.current || !message.current?.value) return;
@@ -63,7 +79,7 @@ export default function Chat({ id, friend, user }: ChatProps) {
 
   return (
     <section className='w-full p-2 relative flex flex-col'>
-      <header className='w-full flex items-center'>
+      <header className='w-full flex items-center gap-x-2.5'>
         <div className='ml-auto flex items-center gap-1.5 rounded-xl shadow-sm bg-slate-200 p-1 min-w-[150px]'>
           <AvatarCircles avatarUrls={['/default-avatar.png']} />
           <div className='flex-center gap-0.5'>
@@ -78,6 +94,16 @@ export default function Chat({ id, friend, user }: ChatProps) {
           </div>
           {isTyping && <WritingAnimation />}
         </div>
+        <TooltipComponent hoverText='Remove contact'>
+          <Button
+            disabled={loading}
+            onClick={deleteFriend}
+            variant={'default'}
+            className='w-10 p-0 h-11 bg-red'
+          >
+            <UserMinus size={20} />
+          </Button>
+        </TooltipComponent>
       </header>
       <div className='w-full p-1 h-[45dvh] border rounded-md overflow-y-auto  mt-2 flex flex-col gap-2'></div>
       <div className='flex-center-col w-full gap-2 mt-4'>
@@ -86,7 +112,11 @@ export default function Chat({ id, friend, user }: ChatProps) {
           placeholder='Type your message here.'
           className='bg-slate-200 outline-none outline-offset-0 border-none'
         />
-        <Button className='bg-blue min-w-[280px]' onClick={onSend}>
+        <Button
+          disabled={loading}
+          className='bg-blue min-w-[280px]'
+          onClick={onSend}
+        >
           Send message
         </Button>
       </div>

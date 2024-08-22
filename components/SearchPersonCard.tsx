@@ -10,15 +10,20 @@ import toast from 'react-hot-toast';
 
 interface SearchPersonCardProps {
   person: UserType;
+  setUser: React.Dispatch<React.SetStateAction<UserType[]>>;
 }
 
-export default function SearchPersonCard({ person }: SearchPersonCardProps) {
+export default function SearchPersonCard({
+  person,
+  setUser,
+}: SearchPersonCardProps) {
   const [loading, setLoading] = React.useState(false);
   const handleAddFriend = async () => {
     try {
       setLoading(true);
       await addFriend(person.id);
       toast.success('Friend request sent');
+      setUser((prev) => prev.filter((fr) => fr.id !== person.id));
       setLoading(false);
     } catch (e: any) {
       console.error(e);

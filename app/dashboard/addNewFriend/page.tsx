@@ -58,7 +58,9 @@ export default function Add_New_Friend_Page() {
       </div>
       <div className='w-full max-h-[64dvh] overflow-y-auto flex flex-col gap-2 py-1'>
         {users.length > 0 &&
-          users.map((user) => <SearchPersonCard key={user.id} person={user} />)}
+          users.map((user) => (
+            <SearchPersonCard setUser={setUsers} key={user.id} person={user} />
+          ))}
       </div>
     </section>
   );
