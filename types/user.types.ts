@@ -1,9 +1,11 @@
+import { LanguageType } from './language.types';
+
 export interface UserType {
   id: string;
   email: string;
   first_name: string;
   last_name: string;
-  native_language: string;
+  native_language: LanguageType;
   conversations: string[];
   status: boolean;
   image: string | null;

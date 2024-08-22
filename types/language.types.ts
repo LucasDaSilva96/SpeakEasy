@@ -1,5 +1,6 @@
 export interface LanguageType {
-  _id: string;
+  id: number;
+  created_at: string;
   language: string;
   name: string;
   supports_formality: boolean;

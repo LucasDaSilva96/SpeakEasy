@@ -20,7 +20,11 @@ export default function UserCard({
           <motion.li
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3, type: 'spring', delay: i * 0.2 }}
+            transition={{
+              duration: 0.3,
+              type: 'spring',
+              delay: i * 0.2 > 1 ? 1 : i * 0.2,
+            }}
             className={
               !flex_row ? 'flex-center-col relative' : 'flex-center relative'
             }

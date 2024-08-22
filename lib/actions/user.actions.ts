@@ -16,12 +16,22 @@ export const getUser = async (id: string) => {
 
     if (error) throw new Error(error.message);
 
+    const { data: native_language, error: native_error } = await supabase
+      .from('languages')
+      .select('*')
+      .eq('id', data.native_language)
+      .single();
+
+    console.log(native_language);
+
+    if (native_error) throw new Error(native_error.message);
+
     const resObj: UserFriendType = {
       id: data.id,
       email: data.email,
       first_name: data.first_name,
       last_name: data.last_name,
-      native_language: data.native_language,
+      native_language: native_language,
       image: data.image,
       status: data.status,
     };

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { UserFriendType, UserType } from '@/types/user.types';
 import toast from 'react-hot-toast';
-import { RealtimeChannel, User } from '@supabase/supabase-js';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { createClient_browser } from '@/lib/supabase/client';
 import { UserMinus } from 'lucide-react';
 import { TooltipComponent } from './ToolTipComponent';
@@ -14,14 +14,15 @@ import { removeFriend } from '@/lib/actions/user.actions';
 
 interface ChatProps {
   id: string;
-  user: User;
+  user: UserType;
   friend: UserFriendType;
+  conversationID: string;
 }
 
-export default function Chat({ id, friend, user }: ChatProps) {
+export default function Chat({ id, friend, user, conversationID }: ChatProps) {
   const supabase = createClient_browser();
   const [isTyping, setIsTyping] = useState(false);
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState(friend.status);
   const [messages, setMessages] = useState<any[]>([]);
   const message = useRef<HTMLTextAreaElement | null>(null);
   const channel = useRef<RealtimeChannel | null>(null);
@@ -29,8 +30,8 @@ export default function Chat({ id, friend, user }: ChatProps) {
 
   useEffect(() => {
     if (!channel.current) {
-      const topic = `${user.id} | ${id}`;
-      console.log('Topic:', topic);
+      const topic = conversationID;
+
       // The topic is the channel name
       channel.current = supabase
         .channel(topic)
@@ -70,7 +71,8 @@ export default function Chat({ id, friend, user }: ChatProps) {
       // The payload is the message object
       payload: {
         message: message.current.value,
-        sender_id: '1',
+        sender_id: user.id,
+        language: user.native_language,
       },
     });
     console.log('Message sent!');

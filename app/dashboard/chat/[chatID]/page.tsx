@@ -1,4 +1,6 @@
 import Chat from '@/components/Chat';
+import { getLoggedInUser } from '@/lib/actions/login.actions';
+import { createOrGetConversation } from '@/lib/actions/message.actions';
 import { getUser } from '@/lib/actions/user.actions';
 import { createClient_server } from '@/lib/supabase/server';
 import { Loader2Icon } from 'lucide-react';
@@ -9,11 +11,9 @@ export default async function Chat_Page({
   params: { chatID: string };
 }) {
   const id = params.chatID;
-  const supabase = await createClient_server();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getLoggedInUser();
   const friend = await getUser(id);
+  const conversationId = await createOrGetConversation(id);
 
   if (!user || !friend)
     return (
@@ -27,5 +27,7 @@ export default async function Chat_Page({
       </div>
     );
 
-  return <Chat id={id} user={user} friend={friend} />;
+  return (
+    <Chat id={id} user={user} friend={friend} conversationID={conversationId} />
+  );
 }

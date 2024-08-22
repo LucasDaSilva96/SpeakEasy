@@ -127,13 +127,21 @@ export const getLoggedInUser = async () => {
     const supabase = await createClient_server();
     const { data, error } = await supabase.auth.getUser();
     if (error) throw new Error(error.message);
-    const { data: userData, error: userError } = await supabase
+    let { data: userData, error: userError } = await supabase
       .from('users')
       .select('*')
       .eq('email', data?.user?.email)
       .single();
     if (userError) throw new Error(userError.message);
     if (!userData) throw new Error('User not found');
+    const { data: native_language, error: native_error } = await supabase
+      .from('languages')
+      .select('*')
+      .eq('id', userData.native_language)
+      .single();
+
+    if (native_error) throw new Error(native_error.message);
+    userData.native_language = native_language;
     return userData as UserType;
   } catch (e: any) {
     console.error(e);
