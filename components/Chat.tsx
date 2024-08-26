@@ -6,11 +6,18 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { UserFriendType, UserType } from '@/types/user.types';
 import toast from 'react-hot-toast';
-import { RealtimeChannel } from '@supabase/supabase-js';
 import { createClient_browser } from '@/lib/supabase/client';
 import { UserMinus } from 'lucide-react';
 import { TooltipComponent } from './ToolTipComponent';
 import { removeFriend } from '@/lib/actions/user.actions';
+import {
+  getConversationMessages,
+  sendMessage,
+} from '@/lib/actions/message.actions';
+import { MessageType } from '@/types/message.types';
+import { translate } from '@/lib/actions/translate.actions';
+import { TargetLanguageCode } from 'deepl-node';
+import BigLoaderScreen from './BigLoaderScreen';
 
 interface ChatProps {
   id: string;
@@ -23,32 +30,65 @@ export default function Chat({ id, friend, user, conversationID }: ChatProps) {
   const supabase = createClient_browser();
   const [isTyping, setIsTyping] = useState(false);
   const [isOnline, setIsOnline] = useState(friend.status);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const message = useRef<HTMLTextAreaElement | null>(null);
-  const channel = useRef<RealtimeChannel | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  const handleInsert = async (payload: any) => {
+    if (payload.new.sender_id === user.id) {
+      setMessages((prev) => [...prev, payload.new]);
+      return;
+    }
+    try {
+      const translated = await translate(
+        payload.new.message,
+        user.native_language.language as TargetLanguageCode
+      );
+      setMessages((prev) => [...prev, { ...payload.new, message: translated }]);
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e.message);
+    }
+  };
 
   useEffect(() => {
-    if (!channel.current) {
-      const topic = conversationID;
-
-      // The topic is the channel name
-      channel.current = supabase
-        .channel(topic)
-        .on(
-          'postgres_changes',
-          { event: 'INSERT', schema: 'public', table: 'messages' },
-          (payload) => {
-            console.log('Change received!', payload);
-          }
-        )
-        .subscribe();
-    }
+    (async () => {
+      try {
+        setIsMounted(true);
+        const data = await getConversationMessages(conversationID);
+        setMessages(data);
+        setIsMounted(false);
+      } catch (e: any) {
+        console.error(e);
+        toast.error(e.message);
+        setIsMounted(false);
+      }
+    })();
+    const channel = supabase
+      .channel(conversationID)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+        },
+        handleInsert
+      )
+      .subscribe((state) => console.log(state));
 
     return () => {
-      if (channel.current) supabase.removeChannel(channel.current!);
+      supabase.removeChannel(channel);
     };
-  }, [id, user.id]);
+  }, [conversationID]);
+
+  useEffect(() => {
+    const msgBoxes = document.querySelectorAll('.message__container');
+    if (msgBoxes.length > 0) {
+      msgBoxes[msgBoxes.length - 1].scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   async function deleteFriend() {
     try {
@@ -63,24 +103,24 @@ export default function Chat({ id, friend, user, conversationID }: ChatProps) {
     }
   }
 
-  function onSend() {
-    if (!channel.current || !message.current?.value) return;
-    channel.current.send({
-      type: 'broadcast',
-      event: 'message',
-      // The payload is the message object
-      payload: {
+  async function onSend() {
+    if (!message.current?.value) return;
+    try {
+      await sendMessage({
+        conversation_id: conversationID,
+        language: user.native_language.language as TargetLanguageCode,
         message: message.current.value,
-        sender_id: user.id,
-        language: user.native_language,
-      },
-    });
-    console.log('Message sent!');
-    message.current.value = '';
+      });
+      message.current.value = '';
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e.message);
+    }
   }
 
   return (
     <section className='w-full p-2 relative flex flex-col'>
+      {isMounted && <BigLoaderScreen />}
       <header className='w-full flex items-center gap-x-2.5'>
         <div className='ml-auto flex items-center gap-1.5 rounded-xl shadow-sm bg-slate-200 p-1 min-w-[150px]'>
           <AvatarCircles avatarUrls={['/default-avatar.png']} />
@@ -107,7 +147,30 @@ export default function Chat({ id, friend, user, conversationID }: ChatProps) {
           </Button>
         </TooltipComponent>
       </header>
-      <div className='w-full p-1 h-[45dvh] border rounded-md overflow-y-auto  mt-2 flex flex-col gap-2'></div>
+      <div className='w-full p-1 h-[45dvh] border rounded-md overflow-y-auto  mt-2 flex flex-col gap-2'>
+        {messages.map((msg, i) => (
+          <div
+            key={i}
+            className={`${
+              msg.sender_id === user.id ? 'self-end' : 'self-start'
+            } relative flex flex-col gap-1`}
+          >
+            <p
+              className={`${
+                msg.sender_id === user.id
+                  ? 'bg-blue text-white'
+                  : 'bg-slate-200 text-gray-600'
+              } p-2 rounded-md max-w-[370px] message__container`}
+            >
+              {msg.message}
+            </p>
+            <span className='text-center w-full text-[12px] text-gray-400'>
+              {new Date(msg.created_at).getHours()}:
+              {new Date(msg.created_at).getMinutes()}
+            </span>
+          </div>
+        ))}
+      </div>
       <div className='flex-center-col w-full gap-2 mt-4'>
         <Textarea
           ref={message}

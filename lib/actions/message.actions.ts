@@ -1,6 +1,10 @@
 'use server';
+import { MessageType } from '@/types/message.types';
 import { createClient_server } from '../supabase/server';
 import { getLoggedInUser } from './login.actions';
+import { translate } from './translate.actions';
+import { TargetLanguageCode } from 'deepl-node';
+import { getUser } from './user.actions';
 
 export const createOrGetConversation = async (userId2: string) => {
   try {
@@ -27,7 +31,66 @@ export const createOrGetConversation = async (userId2: string) => {
         conversationError?.message || 'Error creating conversation'
       );
 
-    return conversation;
+    return conversation.id;
+  } catch (e: any) {
+    console.error(e);
+    throw new Error(e.message);
+  }
+};
+
+interface Message {
+  conversation_id: string;
+  message: string;
+  language: string;
+}
+export const sendMessage = async ({
+  conversation_id,
+  language,
+  message,
+}: Message) => {
+  try {
+    const supabase = await createClient_server();
+    const user = await getLoggedInUser();
+    const { data, error } = await supabase
+      .from('messages')
+      .insert([{ conversation_id, sender_id: user.id, message, language }])
+      .select('id');
+    if (error) throw new Error(error.message);
+
+    const { data: conversation, error: conversationError } = await supabase
+      .from('conversations')
+      .update({ messages: data[0].id })
+      .eq('id', conversation_id)
+      .select();
+
+    if (conversationError || !conversation)
+      throw new Error('Error sending message');
+
+    return data;
+  } catch (e: any) {
+    console.error(e);
+    throw new Error(e.message);
+  }
+};
+
+export const getConversationMessages = async (conversationId: string) => {
+  try {
+    const supabase = await createClient_server();
+    const user = await getLoggedInUser();
+    const { data, error } = await supabase
+      .from('messages')
+      .select('*')
+      .eq('conversation_id', conversationId);
+    if (error) throw new Error(error.message);
+
+    for (const message of data) {
+      message.message = await translate(
+        message.message,
+        user.native_language.language as TargetLanguageCode
+      );
+    }
+
+    return data;
   } catch (e: any) {
     console.error(e);
     throw new Error(e.message);

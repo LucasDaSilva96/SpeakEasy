@@ -22,8 +22,6 @@ export const getUser = async (id: string) => {
       .eq('id', data.native_language)
       .single();
 
-    console.log(native_language);
-
     if (native_error) throw new Error(native_error.message);
 
     const resObj: UserFriendType = {
@@ -31,7 +29,7 @@ export const getUser = async (id: string) => {
       email: data.email,
       first_name: data.first_name,
       last_name: data.last_name,
-      native_language: native_language,
+      native_language: native_language.language,
       image: data.image,
       status: data.status,
     };
