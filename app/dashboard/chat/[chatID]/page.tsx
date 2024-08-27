@@ -2,7 +2,6 @@ import Chat from '@/components/Chat';
 import { getLoggedInUser } from '@/lib/actions/login.actions';
 import { createOrGetConversation } from '@/lib/actions/message.actions';
 import { getUser } from '@/lib/actions/user.actions';
-import { createClient_server } from '@/lib/supabase/server';
 import { Loader2Icon } from 'lucide-react';
 
 export default async function Chat_Page({
@@ -27,7 +26,5 @@ export default async function Chat_Page({
       </div>
     );
 
-  return (
-    <Chat id={id} user={user} friend={friend} conversationID={conversationId} />
-  );
+  return <Chat user={user} friend={friend} conversationID={conversationId} />;
 }

@@ -8,7 +8,7 @@ export const signUpValidation = z
     firstName: z.string().min(2),
     lastName: z.string().min(2),
     image: z.string().optional(),
-    nativeLanguage: z.string().min(2),
+    nativeLanguage: z.string().min(1),
   })
   .superRefine(({ passwordConfirm, password }, ctx) => {
     if (passwordConfirm !== password) {

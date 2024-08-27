@@ -79,3 +79,12 @@
     @apply bg-black bg-opacity-[0.2] backdrop-blur-[5px];
   }
 }
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

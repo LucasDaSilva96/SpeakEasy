@@ -53,15 +53,18 @@ export async function signup(formData: FormData) {
           native_language: data.nativeLanguage,
         },
       ]);
+
+    if (userError && userError.code === '23505')
+      throw new Error('Email already exists');
     if (userError) throw new Error(userError.message);
 
     const { data: res, error } = await supabase.auth.signUp(data);
     if (error) throw new Error(error.message);
 
     revalidatePath('/', 'layout');
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
-    throw new Error('Error signing up');
+    throw new Error(error.message);
   }
   return redirect('/auth');
 }

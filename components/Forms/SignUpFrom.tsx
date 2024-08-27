@@ -77,7 +77,7 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
       setState('login');
     } catch (e: any) {
       console.error(e);
-      toast.error('Failed to create user. Please try again');
+      toast.error(e.message);
     } finally {
       setLoading(false);
     }
@@ -193,7 +193,7 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
                     <SelectContent className='bg-black/75 border-none text-white max-h-[45vh]'>
                       {languages.length > 0 &&
                         languages.map((lang) => (
-                          <SelectItem key={lang._id} value={lang._id}>
+                          <SelectItem key={lang.id} value={`${lang.id}`}>
                             {lang.name}
                           </SelectItem>
                         ))}

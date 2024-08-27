@@ -44,29 +44,34 @@ export const getUser = async (id: string) => {
 export const getUserFriends = async () => {
   try {
     const user = await getLoggedInUser();
+
     const supabase = await createClient_server();
     const { data: friends, error } = await supabase
       .from('friendships')
       .select('*')
-      .or(`user_id.eq.${user.id},or(friend_id.eq.${user.id})`)
+      .contains('users', [user.id])
       .eq('status', 'accepted');
 
     if (error) throw new Error(error.message);
 
     if (!friends || !friends.length) return [];
 
-    const friendsIds = friends.map((friend) => {
-      if (friend.user_id === user.id) return friend.friend_id;
-      return friend.user_id;
-    });
-    const { data: users, error: userError } = (await supabase
-      .from('users')
-      .select('*')
-      .in('id', friendsIds)) as { data: UserType[]; error: any };
+    console.log('Friends:', friends);
 
-    if (userError) throw new Error(userError.message);
+    // const friendsIds = friends.users.map((friend) => {
+    //   friend.map((f) => {
+    //     if (f.user_id === user.id) return f.friend_id;
+    //     return f.user_id;
+    //   });
+    // });
+    // const { data: users, error: userError } = (await supabase
+    //   .from('users')
+    //   .select('*')
+    //   .in('id', friendsIds)) as { data: UserType[]; error: any };
 
-    return users;
+    // if (userError) throw new Error(userError.message);
+
+    return [];
   } catch (e: any) {
     console.error(e);
     throw new Error(e.message);
@@ -81,25 +86,18 @@ export const addFriend = async (friendId: string) => {
     const { data: existingFriendship, error: checkError } = await supabase
       .from('friendships')
       .select('*')
-      .or(
-        `user_id.eq.${user.id},friend_id.eq.${friendId}),or(user_id.eq.${friendId},friend_id.eq.${user.id})`
-      )
-      .eq('status', 'accepted');
+      .contains('users', [user.id, friendId])
+      .eq('status', 'pending');
 
-    if (checkError) {
-      console.error('Error checking existing friendship:', checkError);
-      return null;
-    }
+    if (checkError) throw new Error(checkError.message);
 
     if (existingFriendship && existingFriendship.length > 0) {
-      console.log('Friendship already exists.');
-      return null;
+      throw new Error('You are already friends with this user.');
     }
 
     const { data, error } = await supabase.from('friendships').insert([
       {
-        user_id: user.id,
-        friend_id: friendId,
+        users: [user.id, friendId],
         status: 'pending',
       },
     ]);
@@ -124,24 +122,28 @@ export const searchUsers = async (name: string) => {
     const { data: friendsData, error: friendsError } = await supabase
       .from('friendships')
       .select('*')
-      .or(`user_id.eq.${user.id},or(friend_id.eq.${user.id})`)
-      .eq('status', 'accepted');
+      .contains('users', [user.id])
+      .or(`status.eq.accepted, status.eq.pending`); // Include friends and pending requests
 
-    if (friendsError) throw new Error(friendsError?.message);
+    if (friendsError) throw new Error(friendsError.message);
 
-    // Combine friend IDs from both directions
-    const friendIds = friendsData.map((f) => {
-      if (f.user_id === user.id) return f.friend_id;
-      return f.user_id;
+    const friendIds = friendsData?.map((row) => {
+      if (row.users[0] === user.id) return row.users[1];
+      return row.users[0];
     });
 
-    const { data, error } = await supabase
+    let { data, error } = await supabase
       .from('users')
       .select('*')
       .or(`first_name.ilike.%${name}%,last_name.ilike.%${name}%`)
-      .not('id', 'in', `(${friendIds.join(',')})`); // Exclude friends;
+      .neq('id', user.id);
 
     if (error) throw new Error(error.message);
+
+    if (friendIds && friendIds.length) {
+      data = data?.filter((user) => !friendIds.includes(user.id)) as UserType[];
+    }
+
     return (data as UserType[]) || [];
   } catch (e: any) {
     console.error(e);
@@ -156,15 +158,15 @@ export const getFriendRequests = async () => {
     const { data, error } = await supabase
       .from('friendships')
       .select('*')
-      .or(`user_id.eq.${user.id},or(friend_id.eq.${user.id})`)
+      .contains('users', [user.id])
       .eq('status', 'pending');
 
     if (error) throw new Error(error.message);
     if (!data || !data.length) return [];
 
-    const friendIds = data.map((f) => {
-      if (f.user_id === user.id) return f.friend_id;
-      return f.user_id;
+    const friendIds = data.map((row) => {
+      if (row.users[0] === user.id) return row.users[1];
+      return row.users[0];
     });
     const { data: users, error: userError } = await supabase
       .from('users')
@@ -189,10 +191,9 @@ export const acceptFriendRequest = async (friendId: string, status: string) => {
       const { data, error } = await supabase
         .from('friendships')
         .delete()
-        .or(
-          `user_id.eq.${user.id},friend_id.eq.${friendId},or(user_id.eq.${friendId},friend_id.eq.${user.id})`
-        )
-        .eq('status', 'pending');
+        .contains('users', [user.id, friendId])
+        .eq('status', 'pending')
+        .select();
 
       if (error) throw new Error(error.message);
 
@@ -204,11 +205,12 @@ export const acceptFriendRequest = async (friendId: string, status: string) => {
     const { data, error } = await supabase
       .from('friendships')
       .update({ status: status })
-      .or(
-        `user_id.eq.${user.id},friend_id.eq.${friendId},or(user_id.eq.${friendId},friend_id.eq.${user.id})`
-      );
+      .contains('users', [user.id, friendId])
+      .select();
 
     if (error) throw new Error(error.message);
+    if (!data || !data.length)
+      throw new Error('Error accepting friend request.');
 
     revalidatePath('/dashboard', 'layout');
 
@@ -227,9 +229,7 @@ export const removeFriend = async (friendId: string) => {
     const { data, error } = await supabase
       .from('friendships')
       .delete()
-      .or(
-        `user_id.eq.${user.id},friend_id.eq.${friendId},or(user_id.eq.${friendId},friend_id.eq.${user.id})`
-      )
+      .contains('users', [user.id, friendId])
       .eq('status', 'accepted');
 
     if (error) throw new Error(error.message);

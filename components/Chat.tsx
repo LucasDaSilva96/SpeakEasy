@@ -18,15 +18,15 @@ import { MessageType } from '@/types/message.types';
 import { translate } from '@/lib/actions/translate.actions';
 import { TargetLanguageCode } from 'deepl-node';
 import BigLoaderScreen from './BigLoaderScreen';
+import { formatDate } from '@/lib/utils';
 
 interface ChatProps {
-  id: string;
   user: UserType;
   friend: UserFriendType;
   conversationID: string;
 }
 
-export default function Chat({ id, friend, user, conversationID }: ChatProps) {
+export default function Chat({ friend, user, conversationID }: ChatProps) {
   const supabase = createClient_browser();
   const [isTyping, setIsTyping] = useState(false);
   const [isOnline, setIsOnline] = useState(friend.status);
@@ -40,6 +40,7 @@ export default function Chat({ id, friend, user, conversationID }: ChatProps) {
       setMessages((prev) => [...prev, payload.new]);
       return;
     }
+
     try {
       const translated = await translate(
         payload.new.message,
@@ -110,6 +111,7 @@ export default function Chat({ id, friend, user, conversationID }: ChatProps) {
         conversation_id: conversationID,
         language: user.native_language.language as TargetLanguageCode,
         message: message.current.value,
+        friend_id: friend.id,
       });
       message.current.value = '';
     } catch (e: any) {
@@ -164,10 +166,20 @@ export default function Chat({ id, friend, user, conversationID }: ChatProps) {
             >
               {msg.message}
             </p>
-            <span className='text-center w-full text-[12px] text-gray-400'>
-              {new Date(msg.created_at).getHours()}:
-              {new Date(msg.created_at).getMinutes()}
-            </span>
+            <div
+              className={`w-full text-[12px] text-gray-400 flex-center gap-1`}
+            >
+              <div
+                className={`${
+                  msg.sender_id === user.id ? 'ml-auto' : 'mr-auto'
+                } flex gap-1`}
+              >
+                <span>
+                  {msg.sender_id === user.id ? 'You' : friend.first_name}
+                </span>
+                <span>{formatDate(msg.created_at)}</span>
+              </div>
+            </div>
           </div>
         ))}
       </div>

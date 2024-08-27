@@ -26,7 +26,6 @@ export default function NotificationHeader() {
   const [loading, setLoading] = React.useState(false);
 
   const handleAccept = async (id: string, status: string) => {
-    console.log(id, status);
     try {
       setLoading(true);
       await acceptFriendRequest(id, status);

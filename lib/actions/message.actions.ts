@@ -1,10 +1,8 @@
 'use server';
-import { MessageType } from '@/types/message.types';
 import { createClient_server } from '../supabase/server';
 import { getLoggedInUser } from './login.actions';
 import { translate } from './translate.actions';
 import { TargetLanguageCode } from 'deepl-node';
-import { getUser } from './user.actions';
 
 export const createOrGetConversation = async (userId2: string) => {
   try {
@@ -42,15 +40,32 @@ interface Message {
   conversation_id: string;
   message: string;
   language: string;
+  friend_id: string;
 }
 export const sendMessage = async ({
   conversation_id,
   language,
   message,
+  friend_id,
 }: Message) => {
   try {
     const supabase = await createClient_server();
     const user = await getLoggedInUser();
+
+    const { data: friend, error: friendError } = await supabase
+      .from('friendships')
+      .select('*')
+      .or(
+        `user_id.eq.${user.id},friend_id.eq.${friend_id},or(friend_id.eq.${user.id},user_id.eq.${friend_id})`
+      )
+      .eq('status', 'accepted');
+
+    if (friendError) throw new Error('Error sending message');
+    if (!friend || !friend.length)
+      throw new Error(
+        'Friendship not found. This may be because the user has been removed from your friends list.'
+      );
+
     const { data, error } = await supabase
       .from('messages')
       .insert([{ conversation_id, sender_id: user.id, message, language }])
