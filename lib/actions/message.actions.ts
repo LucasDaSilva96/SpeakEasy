@@ -12,7 +12,7 @@ export const createOrGetConversation = async (userId2: string) => {
     const { data, error } = await supabase
       .from('conversations')
       .select('id')
-      .contains('users_id', [userId1, userId2]);
+      .contains('user_ids', [userId1, userId2]);
 
     if (error) throw new Error(error.message);
 
@@ -20,7 +20,7 @@ export const createOrGetConversation = async (userId2: string) => {
 
     const { data: conversation, error: conversationError } = await supabase
       .from('conversations')
-      .insert([{ users_id: [userId1, userId2] }])
+      .insert([{ user_ids: [userId1, userId2] }])
       .select('id')
       .single();
 

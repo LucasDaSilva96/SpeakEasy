@@ -56,22 +56,18 @@ export const getUserFriends = async () => {
 
     if (!friends || !friends.length) return [];
 
-    console.log('Friends:', friends);
+    const friendIds = friends?.map((row) => {
+      if (row.users[0] === user.id) return row.users[1];
+      return row.users[0];
+    });
+    const { data: users, error: userError } = (await supabase
+      .from('users')
+      .select('*')
+      .in('id', friendIds)) as { data: UserType[]; error: any };
 
-    // const friendsIds = friends.users.map((friend) => {
-    //   friend.map((f) => {
-    //     if (f.user_id === user.id) return f.friend_id;
-    //     return f.user_id;
-    //   });
-    // });
-    // const { data: users, error: userError } = (await supabase
-    //   .from('users')
-    //   .select('*')
-    //   .in('id', friendsIds)) as { data: UserType[]; error: any };
+    if (userError) throw new Error(userError.message);
 
-    // if (userError) throw new Error(userError.message);
-
-    return [];
+    return users as UserType[];
   } catch (e: any) {
     console.error(e);
     throw new Error(e.message);
@@ -150,7 +146,7 @@ export const searchUsers = async (name: string) => {
     throw new Error(e.message);
   }
 };
-
+// TODO - Fix the bug regarding the friend request being sent to the sender itself also
 export const getFriendRequests = async () => {
   try {
     const user = await getLoggedInUser();
