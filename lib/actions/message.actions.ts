@@ -123,7 +123,18 @@ export const getDashboardConversations = async () => {
     if (messagesError) throw new Error(messagesError.message);
     if (!messages) return [];
 
+    const { data: users, error: usersError } = await supabase
+      .from('users')
+      .select('*');
+
+    if (usersError) throw new Error(usersError.message);
+
     const conversationsData = conversations.map((conversation) => {
+      const friendId = conversation.user_ids.find(
+        (id: string) => id !== user.id
+      );
+
+      const friend = users.find((user) => user.id === friendId);
       return {
         conversation_id: conversation.id,
         messages: messages.map((message) => {
@@ -131,9 +142,13 @@ export const getDashboardConversations = async () => {
             return message;
           }
         }),
-        friend_id: conversation.user_ids.find((id: string) => id !== user.id),
+        friend_id: friendId,
+        friend_name: friend?.first_name || '',
+        friend_profile_image: friend?.image || '/default-avatar.png',
       };
     });
+
+    if (!conversationsData || !conversations.length) return [];
 
     return conversationsData as Conversation[];
   } catch (e: any) {
