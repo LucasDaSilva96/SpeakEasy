@@ -95,6 +95,7 @@ export const addFriend = async (friendId: string) => {
       {
         users: [user.id, friendId],
         status: 'pending',
+        sender_id: user.id,
       },
     ]);
 
@@ -146,7 +147,7 @@ export const searchUsers = async (name: string) => {
     throw new Error(e.message);
   }
 };
-// TODO - Fix the bug regarding the friend request being sent to the sender itself also
+
 export const getFriendRequests = async () => {
   try {
     const user = await getLoggedInUser();
@@ -155,7 +156,8 @@ export const getFriendRequests = async () => {
       .from('friendships')
       .select('*')
       .contains('users', [user.id])
-      .eq('status', 'pending');
+      .eq('status', 'pending')
+      .eq('sender_id', user.id);
 
     if (error) throw new Error(error.message);
     if (!data || !data.length) return [];

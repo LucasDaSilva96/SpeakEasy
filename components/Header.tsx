@@ -7,6 +7,7 @@ import { Loader2Icon, LogOutIcon } from 'lucide-react';
 import { logout } from '@/lib/actions/login.actions';
 import toast from 'react-hot-toast';
 import { UserType } from '@/types/user.types';
+import { Badge } from '@/components/ui/badge';
 import NotificationHeader from './NotificationHeader';
 
 export default function Header({ user }: { user: UserType | null }) {
@@ -37,6 +38,9 @@ export default function Header({ user }: { user: UserType | null }) {
           <p className='font-extralight text-xs text-gray-500'>
             {user?.first_name}
           </p>
+          <Badge className='bg-blue'>
+            <span>{user?.native_language.name}</span>
+          </Badge>
         </div>
       </aside>
       <div className='flex-center gap-10'>

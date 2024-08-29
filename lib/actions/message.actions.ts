@@ -55,12 +55,10 @@ export const sendMessage = async ({
     const { data: friend, error: friendError } = await supabase
       .from('friendships')
       .select('*')
-      .or(
-        `user_id.eq.${user.id},friend_id.eq.${friend_id},or(friend_id.eq.${user.id},user_id.eq.${friend_id})`
-      )
+      .contains('users', [user.id, friend_id])
       .eq('status', 'accepted');
 
-    if (friendError) throw new Error('Error sending message');
+    if (friendError) throw new Error(friendError.message);
     if (!friend || !friend.length)
       throw new Error(
         'Friendship not found. This may be because the user has been removed from your friends list.'
@@ -69,17 +67,8 @@ export const sendMessage = async ({
     const { data, error } = await supabase
       .from('messages')
       .insert([{ conversation_id, sender_id: user.id, message, language }])
-      .select('id');
-    if (error) throw new Error(error.message);
-
-    const { data: conversation, error: conversationError } = await supabase
-      .from('conversations')
-      .update({ messages: data[0].id })
-      .eq('id', conversation_id)
       .select();
-
-    if (conversationError || !conversation)
-      throw new Error('Error sending message');
+    if (error) throw new Error(error.message);
 
     return data;
   } catch (e: any) {

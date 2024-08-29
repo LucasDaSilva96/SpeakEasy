@@ -12,8 +12,8 @@ export const translate = async (
     const result = await translator.translateText(text, null, targetLang);
 
     return result.text;
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    throw new Error('Error translating text');
+    throw new Error(err.message);
   }
 };
