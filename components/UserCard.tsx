@@ -3,18 +3,24 @@ import React from 'react';
 import AvatarCircles from './magicui/avatar-circles';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { UserFriendType } from '@/types/user.types';
+import { UserFriendType, UserType } from '@/types/user.types';
 
 export default function UserCard({
   users,
   flex_row,
 }: {
-  users: UserFriendType[] | [];
+  users: UserFriendType[] | UserType[] | [];
   flex_row: boolean;
 }) {
   if (users.length === 0) return null;
   return (
-    <motion.ul className='min-w-20 max-w-[98dvw] flex items-center gap-2 overflow-x-auto px-4 overflow-y-hidden'>
+    <motion.ul
+      className={`flex ${
+        !flex_row
+          ? 'flex-col overflow-y-auto gap-2 items-start'
+          : 'min-w-20 max-w-[98dvw] gap-2 overflow-x-auto items-center px-4 overflow-y-hidden'
+      }`}
+    >
       {users.map((user, i) => (
         <Link href={`/dashboard/chat/${user.id}`} key={i}>
           <motion.li

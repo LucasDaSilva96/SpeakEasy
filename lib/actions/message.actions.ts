@@ -1,5 +1,4 @@
 'use server';
-import { MessageType } from '@/types/message.types';
 import { createClient_server } from '../supabase/server';
 import { getLoggedInUser } from './login.actions';
 import { translate } from './translate.actions';
@@ -107,13 +106,16 @@ export const getDashboardConversations = async () => {
   try {
     const supabase = await createClient_server();
     const user = await getLoggedInUser();
+
     const { data: conversations, error } = await supabase
       .from('conversations')
       .select('*')
       .contains('user_ids', [user.id]);
 
     if (error) throw new Error(error.message);
-    if (!conversations) return [];
+    if (!conversations || conversations.length <= 0) return [];
+
+    console.log('conversations', conversations);
 
     const { data: messages, error: messagesError } = await supabase
       .from('messages')

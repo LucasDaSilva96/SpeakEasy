@@ -32,8 +32,6 @@ export async function login(formData: FormData) {
 export async function signup(formData: FormData) {
   const supabase = await createClient_server();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
   const data = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
@@ -129,7 +127,11 @@ export const getLoggedInUser = async () => {
   try {
     const supabase = await createClient_server();
     const { data, error } = await supabase.auth.getUser();
+
     if (error) throw new Error(error.message);
+
+    if (!data || !data.user) throw new Error('User not found');
+
     let { data: userData, error: userError } = await supabase
       .from('users')
       .select('*')

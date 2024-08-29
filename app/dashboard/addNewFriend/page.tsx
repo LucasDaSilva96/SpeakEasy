@@ -40,7 +40,7 @@ export default function Add_New_Friend_Page() {
           ref={inputRef}
           type='text'
           minLength={0}
-          placeholder='Search person'
+          placeholder='Search for users'
           className='bg-slate-300 rounded-md py-1 px-1'
         />
         <Button

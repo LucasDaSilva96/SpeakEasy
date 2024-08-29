@@ -10,13 +10,14 @@ import {
 import { usePathname, useRouter } from 'next/navigation';
 import { Dock, DockIcon } from './magicui/dock';
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
+import { revalidate } from '@/lib/revalidation';
 
 export default function Footer() {
   const url = usePathname();
   const router = useRouter();
 
   const handleRedirect = (path: string) => {
+    revalidate('/');
     return router.push(path);
   };
 
