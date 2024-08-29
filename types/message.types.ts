@@ -1,6 +1,6 @@
 export interface MessageType {
   conversation_id: string;
-  created_at: '2024-08-26T19:19:40.395759+00:00';
+  created_at: string;
   id: string;
   language: string;
   message: string;

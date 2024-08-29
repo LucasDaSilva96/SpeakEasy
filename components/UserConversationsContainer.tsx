@@ -3,7 +3,6 @@
 import { MessageType } from '@/types/message.types';
 import { UserType } from '@/types/user.types';
 import { motion } from 'framer-motion';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';

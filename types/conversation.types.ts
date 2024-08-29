@@ -1,7 +1,7 @@
-export interface ConversationType {
-  _id: string;
-  users: string[];
-  messages: string[];
-  createdAt: Date;
-  updatedAt: Date;
+import { MessageType } from './message.types';
+
+export interface Conversation {
+  conversation_id: string;
+  messages: MessageType[];
+  friend_id: string;
 }

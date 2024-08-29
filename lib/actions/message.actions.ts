@@ -1,8 +1,10 @@
 'use server';
+import { MessageType } from '@/types/message.types';
 import { createClient_server } from '../supabase/server';
 import { getLoggedInUser } from './login.actions';
 import { translate } from './translate.actions';
 import { TargetLanguageCode } from 'deepl-node';
+import { Conversation } from '@/types/conversation.types';
 
 export const createOrGetConversation = async (userId2: string) => {
   try {
@@ -95,6 +97,45 @@ export const getConversationMessages = async (conversationId: string) => {
     }
 
     return data;
+  } catch (e: any) {
+    console.error(e);
+    throw new Error(e.message);
+  }
+};
+
+export const getDashboardConversations = async () => {
+  try {
+    const supabase = await createClient_server();
+    const user = await getLoggedInUser();
+    const { data: conversations, error } = await supabase
+      .from('conversations')
+      .select('*')
+      .contains('user_ids', [user.id]);
+
+    if (error) throw new Error(error.message);
+    if (!conversations) return [];
+
+    const { data: messages, error: messagesError } = await supabase
+      .from('messages')
+      .select('*')
+      .eq('conversation_id', conversations[0].id);
+
+    if (messagesError) throw new Error(messagesError.message);
+    if (!messages) return [];
+
+    const conversationsData = conversations.map((conversation) => {
+      return {
+        conversation_id: conversation.id,
+        messages: messages.map((message) => {
+          if (message.conversation_id === conversation.id) {
+            return message;
+          }
+        }),
+        friend_id: conversation.user_ids.find((id: string) => id !== user.id),
+      };
+    });
+
+    return conversationsData as Conversation[];
   } catch (e: any) {
     console.error(e);
     throw new Error(e.message);

@@ -157,7 +157,7 @@ export const getFriendRequests = async () => {
       .select('*')
       .contains('users', [user.id])
       .eq('status', 'pending')
-      .eq('sender_id', user.id);
+      .neq('sender_id', user.id);
 
     if (error) throw new Error(error.message);
     if (!data || !data.length) return [];

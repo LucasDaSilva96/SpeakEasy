@@ -3,9 +3,14 @@ import UserConversationsContainer from '@/components/UserConversationsContainer'
 import { getUserFriends } from '@/lib/actions/user.actions';
 import UserCard from '@/components/UserCard';
 import { UserFriendType } from '@/types/user.types';
+import { getDashboardConversations } from '@/lib/actions/message.actions';
 
 export default async function Dashboard() {
   const friends = (await getUserFriends()) as unknown as UserFriendType[];
+
+  const conversations = await getDashboardConversations();
+
+  console.log('####', conversations);
 
   return (
     <section className='w-full px-2 flex flex-col gap-2 pt-2'>

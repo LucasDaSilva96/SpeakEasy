@@ -19,6 +19,8 @@ import { translate } from '@/lib/actions/translate.actions';
 import { TargetLanguageCode } from 'deepl-node';
 import BigLoaderScreen from './BigLoaderScreen';
 import { formatDate } from '@/lib/utils';
+import { revalidatePath } from 'next/cache';
+import { revalidate } from '@/lib/revalidation';
 
 interface ChatProps {
   user: UserType;
@@ -106,6 +108,7 @@ export default function Chat({ friend, user, conversationID }: ChatProps) {
 
   async function onSend() {
     if (!message.current?.value) return;
+    let isError = false;
     try {
       await sendMessage({
         conversation_id: conversationID,
@@ -115,8 +118,12 @@ export default function Chat({ friend, user, conversationID }: ChatProps) {
       });
       message.current.value = '';
     } catch (e: any) {
+      isError = true;
       console.error(e);
       toast.error(e.message);
+    }
+    if (isError) {
+      revalidate('/dashboard');
     }
   }
 
