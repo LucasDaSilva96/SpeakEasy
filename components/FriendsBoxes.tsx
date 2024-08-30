@@ -8,8 +8,12 @@ import { useState } from 'react';
 
 type UserCardProps = {
   friends: UserFriendType[] | UserType[];
+  isOnAccountPage?: boolean;
 };
-export default function FriendsBoxes({ friends }: UserCardProps) {
+export default function FriendsBoxes({
+  friends,
+  isOnAccountPage = false,
+}: UserCardProps) {
   const [search, setSearch] = useState('');
   const [friendsList, setFriendsList] = useState(friends);
   if (friends.length === 0) return null;

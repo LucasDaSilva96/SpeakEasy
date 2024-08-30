@@ -115,8 +115,6 @@ export const getDashboardConversations = async () => {
     if (error) throw new Error(error.message);
     if (!conversations || conversations.length <= 0) return [];
 
-    console.log('conversations', conversations);
-
     const { data: messages, error: messagesError } = await supabase
       .from('messages')
       .select('*')

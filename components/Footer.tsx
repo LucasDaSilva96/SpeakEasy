@@ -79,7 +79,7 @@ export default function Footer() {
         </DockIcon>
         <DockIcon
           className={`${
-            url === '/dashboard/profile'
+            url.startsWith('/dashboard/profile')
               ? 'bg-blue shadow-md'
               : 'bg-transparent shadow-none'
           } p-2 flex-center group hover:bg-blue`}
