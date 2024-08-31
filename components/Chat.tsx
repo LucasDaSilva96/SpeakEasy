@@ -145,12 +145,12 @@ export default function Chat({ friend, user, conversationID }: ChatProps) {
           </div>
           {isTyping && <WritingAnimation />}
         </div>
-        <TooltipComponent hoverText='Remove contact'>
+        <TooltipComponent hoverText={`Remove ${friend.first_name}`}>
           <Button
             disabled={loading}
             onClick={deleteFriend}
             variant={'default'}
-            className='w-10 p-0 h-11 bg-red'
+            className='w-10 p-0 h-11'
           >
             <UserMinus size={20} />
           </Button>

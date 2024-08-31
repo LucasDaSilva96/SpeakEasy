@@ -112,6 +112,8 @@ export const getDashboardConversations = async () => {
       .select('*')
       .contains('user_ids', [user.id]);
 
+    console.log(conversations);
+
     if (error) throw new Error(error.message);
     if (!conversations || conversations.length <= 0) return [];
 

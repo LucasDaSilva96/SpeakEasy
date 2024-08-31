@@ -41,11 +41,11 @@ export default async function DashboardLayout({
           },
         }}
       />
-      <div className='w-full h-[80dvh] flex relative gap-2 p-2'>
+      <div className='w-full h-[70dvh] flex relative gap-2 p-2'>
         <div>
           <SideNavigation />
         </div>
-        {children}
+        <div className='max-h-[70dvh] overflow-y-auto'>{children}</div>
       </div>
     </>
   );

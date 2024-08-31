@@ -4,6 +4,7 @@ import { createClient_server } from '../supabase/server';
 import { getLoggedInUser } from './login.actions';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { revalidate } from '../revalidation';
 
 export const getUser = async (id: string) => {
   try {
@@ -238,4 +239,29 @@ export const removeFriend = async (friendId: string) => {
     throw new Error(e.message);
   }
   return redirect('/dashboard');
+};
+
+// TODO: Fix the logic for deleting a conversation? Right now it's deleting all conversations between the two users.
+export const deleteConversation = async (
+  friendId: string,
+  revalidate_path = '/dashboard'
+) => {
+  let isError = false;
+  try {
+    const user = await getLoggedInUser();
+    const supabase = await createClient_server();
+    const { error } = await supabase
+      .from('conversations')
+      .delete()
+      .contains('user_ids', [user.id, friendId]);
+
+    if (error) throw new Error(error.message);
+  } catch (e: any) {
+    isError = true;
+    console.error(e);
+    throw new Error(e.message);
+  }
+  if (!isError) {
+    revalidate(revalidate_path, 'layout');
+  }
 };
