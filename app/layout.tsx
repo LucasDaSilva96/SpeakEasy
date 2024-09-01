@@ -50,7 +50,7 @@ export default async function RootLayout({
             },
           }}
         />
-        {children}
+        <div>{children}</div>
       </body>
     </html>
   );

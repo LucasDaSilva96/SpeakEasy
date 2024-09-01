@@ -265,3 +265,73 @@ export const deleteConversation = async (
     revalidate(revalidate_path, 'layout');
   }
 };
+
+export const updateAccount = async (formData: FormData) => {
+  try {
+    const user = await getLoggedInUser();
+    const supabase = await createClient_server();
+
+    const image = (formData.get('image') as File) || null;
+    const password = (formData.get('password') as string) || null;
+    const email = formData.get('email') as string;
+    const native_language = formData.get('nativeLanguage') as string;
+
+    if (!isNaN(Number(native_language))) {
+      await supabase
+        .from('users')
+        .update({
+          native_language: Number(native_language),
+        })
+        .eq('id', user.id);
+    }
+
+    // Update the user's password
+    if (password) {
+      if (password.length < 8) {
+        throw new Error('Password must be at least 8 characters long');
+      }
+
+      await supabase.auth.updateUser({ password });
+    }
+
+    // Update the user's image
+    if (image) {
+      if (image.size > 1024 * 1024 * 2) {
+        throw new Error('Image must be less than 2MB');
+      }
+      const { data, error } = await supabase.storage
+        .from('avatars')
+        .upload(`images/${user.id}`, image, {
+          upsert: true,
+          contentType: image.type,
+        });
+
+      if (error) throw new Error(error.message);
+
+      const { data: fileData } = await supabase.storage
+        .from('avatars')
+        .getPublicUrl(`images/${user.id}`);
+
+      await supabase
+        .from('users')
+        .update({ image: fileData.publicUrl })
+        .eq('id', user.id);
+    }
+
+    if (email !== user.email) {
+      await supabase.auth.updateUser({ email });
+    }
+
+    await supabase
+      .from('users')
+      .update({
+        first_name: formData.get('firstName') as string,
+        last_name: formData.get('lastName') as string,
+      })
+      .eq('id', user.id);
+  } catch (e: any) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+  return revalidatePath('/dashboard/profile', 'layout');
+};

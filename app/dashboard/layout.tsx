@@ -50,7 +50,7 @@ export default async function DashboardLayout({
           },
         }}
       />
-      <div className='w-full min-h-screen flex flex-col relative'>
+      <div className='w-full h-screen flex flex-col relative'>
         <Header user={user} />
         {children}
         <Footer />

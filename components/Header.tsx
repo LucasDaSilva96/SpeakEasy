@@ -26,7 +26,7 @@ export default function Header({ user }: { user: UserType | null }) {
     }
   };
   return (
-    <header className='w-full flex items-center justify-between px-1 py-1'>
+    <header className='w-full flex items-center justify-between px-1 py-1 '>
       <aside className='flex gap-1.5 items-center'>
         <div className='flex-center-col'>
           <div className='w-12 h-12 relative rounded-full overflow-clip'>

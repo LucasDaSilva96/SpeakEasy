@@ -1,8 +1,7 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { set, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -29,6 +28,7 @@ import { getAvailableLanguages } from '@/lib/actions/languages.actions';
 import { UserType } from '@/types/user.types';
 import { updateAccountValidation } from '@/lib/validation/updateAccountValidation';
 import Image from 'next/image';
+import { updateAccount } from '@/lib/actions/user.actions';
 
 interface UpdateAccountFormProps {
   user: UserType;
@@ -72,11 +72,11 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof updateAccountValidation>) {
     // ✅ This will be type-safe and validated.
-    setLoading(true);
     try {
+      setLoading(true);
       const formData = new FormData();
-      if (values.image) {
-        formData.append('image', values.image);
+      if (file) {
+        formData.append('image', file);
       }
       if (values.password) {
         formData.append('password', values.password);
@@ -86,8 +86,8 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
       formData.append('lastName', values.lastName);
       formData.append('nativeLanguage', values.nativeLanguage);
 
-      // await signup(formData);
-      toast.success('User created successfully. Please verify your email');
+      await updateAccount(formData);
+      toast.success('Account updated successfully');
     } catch (e: any) {
       console.error(e);
       toast.error(e.message);

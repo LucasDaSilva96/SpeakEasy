@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import AvatarCircles from '@/components/magicui/avatar-circles';
 import WritingAnimation from '@/components/WritingAnimation';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -19,8 +18,8 @@ import { translate } from '@/lib/actions/translate.actions';
 import { TargetLanguageCode } from 'deepl-node';
 import BigLoaderScreen from './BigLoaderScreen';
 import { formatDate } from '@/lib/utils';
-import { revalidatePath } from 'next/cache';
 import { revalidate } from '@/lib/revalidation';
+import Image from 'next/image';
 
 interface ChatProps {
   user: UserType;
@@ -132,7 +131,16 @@ export default function Chat({ friend, user, conversationID }: ChatProps) {
       {isMounted && <BigLoaderScreen />}
       <header className='w-full flex items-center gap-x-2.5'>
         <div className='ml-auto flex items-center gap-1.5 rounded-xl shadow-sm bg-slate-200 p-1 min-w-[150px]'>
-          <AvatarCircles avatarUrls={['/default-avatar.png']} />
+          <div className='w-12 h-12 relative rounded-full overflow-clip'>
+            <Image
+              src={friend?.image || '/default-avatar.png'}
+              alt={friend?.first_name + 'profile image'}
+              fill
+              style={{
+                objectFit: 'cover',
+              }}
+            />
+          </div>
           <div className='flex-center gap-0.5'>
             <h2 className='font-extralight text-gray-600 text-sm'>
               {friend?.first_name}
