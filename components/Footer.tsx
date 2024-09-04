@@ -27,20 +27,20 @@ export default function Footer() {
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5, type: 'spring' }}
       exit={{ y: 100, opacity: 0 }}
-      className='mt-auto relative text-white flex-center pb-0.5'
+      className='mt-auto relative flex-center pb-0.5'
     >
       <Dock
         magnification={60}
         distance={100}
         direction='middle'
-        className='min-w-[380px] flex justify-evenly bg-slate-300 shadow-lg relative'
+        className='min-w-[380px] flex justify-evenly bg-white/50 shadow-lg relative'
       >
         <DockIcon
           className={`${
             url === '/dashboard'
-              ? 'bg-blue shadow-md'
+              ? 'bg-brown shadow-md'
               : 'bg-transparent shadow-none'
-          } p-2 flex-center group hover:bg-blue`}
+          } p-2 flex-center group hover:bg-brown`}
         >
           <HomeIcon
             className='size-full'
@@ -52,9 +52,9 @@ export default function Footer() {
         <DockIcon
           className={`${
             url === '/dashboard/newChat'
-              ? 'bg-blue shadow-md'
+              ? 'bg-brown shadow-md'
               : 'bg-transparent shadow-none'
-          } p-2 flex-center group hover:bg-blue`}
+          } p-2 flex-center group hover:bg-brown`}
         >
           <MessageCircleMoreIcon
             className='size-full z-10'
@@ -66,9 +66,9 @@ export default function Footer() {
         <DockIcon
           className={`${
             url === '/dashboard/addNewFriend'
-              ? 'bg-blue shadow-md'
+              ? 'bg-brown shadow-md'
               : 'bg-transparent shadow-none'
-          } p-2 flex-center group hover:bg-blue`}
+          } p-2 flex-center group hover:bg-brown`}
         >
           <UserRoundPlusIcon
             className='size-full'
@@ -80,9 +80,9 @@ export default function Footer() {
         <DockIcon
           className={`${
             url.startsWith('/dashboard/profile')
-              ? 'bg-blue shadow-md'
+              ? 'bg-brown shadow-md'
               : 'bg-transparent shadow-none'
-          } p-2 flex-center group hover:bg-blue`}
+          } p-2 flex-center group hover:bg-brown`}
         >
           <UserCogIcon
             className='size-full'

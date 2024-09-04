@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Loader2, SmilePlusIcon } from 'lucide-react';
+import { AlertCircleIcon, Bell, Loader2, SmilePlusIcon } from 'lucide-react';
 import {
   Drawer,
   DrawerClose,
@@ -55,12 +55,12 @@ export default function NotificationHeader() {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant='ghost'>
-          <div className='flex items-center'>
-            <SmilePlusIcon size={24} className='text-blue' />
-            <span className='relative flex h-3 w-3 self-start  -mt-1'>
-              <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-red opacity-75'></span>
-              <span className='relative inline-flex rounded-full h-3 w-3 bg-red'></span>
+        <Button variant='ghost' className='hover:bg-transparent'>
+          <div className='flex items-center animate-bounce'>
+            <Bell size={24} className='text-white' />
+            <span className='relative flex h-3 w-3 self-start -mt-1 -ml-1'>
+              <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-blue opacity-75'></span>
+              <span className='relative inline-flex rounded-full h-3 w-3 bg-blue'></span>
             </span>
           </div>
         </Button>
@@ -83,15 +83,19 @@ export default function NotificationHeader() {
                 className='flex items-center justify-between border rounded-lg p-2'
               >
                 <div className='flex items-center gap-4'>
-                  <Image
-                    src={fr.image || '/default-avatar.png'}
-                    alt={fr.first_name + 'profile'}
-                    width={48}
-                    height={48}
-                    loading='eager'
-                    sizes='(max-width: 200px) 100vw, (max-width: 300px) 50vw, 33vw'
-                    className='rounded-full border p-1 border-blue'
-                  />
+                  <div className='w-12 h-12 relative rounded-full overflow-clip'>
+                    <Image
+                      src={fr.image || '/default-avatar.png'}
+                      alt={fr.first_name + 'profile'}
+                      fill
+                      sizes='(max-width: 200px) 100vw, (max-width: 300px) 50vw, 33vw'
+                      priority
+                      style={{
+                        objectFit: 'cover',
+                      }}
+                    />
+                  </div>
+
                   <div>
                     <h1 className='font-semibold'>
                       {fr.first_name + ' ' + fr.last_name}

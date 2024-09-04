@@ -100,7 +100,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className='flex-center-col gap-6 bg-slate-300 p-1 rounded-md'
+        className='flex-center-col gap-4 p-1 rounded-md text-black'
       >
         <div className='flex-center gap-2'>
           <Input
@@ -110,7 +110,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
             onChange={handleChange}
             className='max-w-[200px] overflow-hidden cursor-pointer border hover:border-blue hover:shadow-blue'
           />
-          <div className='w-32 h-32 relative rounded-full overflow-clip'>
+          <div className='w-24 h-24 relative rounded-full overflow-clip'>
             <Image
               sizes='(max-width: 200px) 100vw, (max-width: 300px) 50vw, 33vw'
               src={image}
@@ -129,7 +129,9 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
             name='firstName'
             render={({ field }) => (
               <FormItem className='flex flex-col w-full'>
-                <FormLabel className='text-xs'>First Name*</FormLabel>
+                <FormLabel className='text-xs text-white'>
+                  First Name*
+                </FormLabel>
                 <FormControl>
                   <Input
                     type='text'
@@ -140,7 +142,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
                   />
                 </FormControl>
                 <FormDescription className='hidden'>
-                  Sign up with your first name
+                  Update your first name
                 </FormDescription>
                 <FormMessage className='text-rose-600' />
               </FormItem>
@@ -152,7 +154,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
             name='lastName'
             render={({ field }) => (
               <FormItem className='flex flex-col w-full'>
-                <FormLabel className='text-xs'>Last Name*</FormLabel>
+                <FormLabel className='text-xs text-white'>Last Name*</FormLabel>
                 <FormControl>
                   <Input
                     type='text'
@@ -163,7 +165,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
                   />
                 </FormControl>
                 <FormDescription className='hidden'>
-                  Sign up with your last name
+                  Update your last name
                 </FormDescription>
                 <FormMessage className='text-rose-600' />
               </FormItem>
@@ -177,7 +179,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
             name='email'
             render={({ field }) => (
               <FormItem className='flex flex-col w-full'>
-                <FormLabel className='text-xs'>Email*</FormLabel>
+                <FormLabel className='text-xs text-white'>Email*</FormLabel>
                 <FormControl>
                   <Input
                     type='email'
@@ -188,7 +190,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
                   />
                 </FormControl>
                 <FormDescription className='hidden'>
-                  Sign up with your email
+                  Update your email
                 </FormDescription>
                 <FormMessage className='text-rose-600' />
               </FormItem>
@@ -200,7 +202,9 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
             name='nativeLanguage'
             render={({ field }) => (
               <FormItem className='flex flex-col gap-0.5 w-full relative'>
-                <FormLabel>Native Language*</FormLabel>
+                <FormLabel className='text-white text-xs'>
+                  Native Language*
+                </FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={user.native_language.id.toString()}
@@ -220,7 +224,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
                   </SelectContent>
                 </Select>
                 <FormDescription className='hidden'>
-                  You can manage email addresses in your{' '}
+                  Update your native language
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -234,7 +238,9 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
             name='password'
             render={({ field }) => (
               <FormItem className='flex flex-col w-full'>
-                <FormLabel className='text-xs'>Update password</FormLabel>
+                <FormLabel className='text-xs text-white'>
+                  Update password
+                </FormLabel>
                 <FormControl>
                   <Input
                     type='password'
@@ -245,7 +251,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
                   />
                 </FormControl>
                 <FormDescription className='hidden'>
-                  Sign up with your password
+                  Update your password
                 </FormDescription>
                 <FormMessage className='text-rose-600' />
               </FormItem>
@@ -255,7 +261,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
         {/*  */}
         <Button
           disabled={loading}
-          className='flex items-center gap-1'
+          className='flex items-center gap-1 bg-brown hover:bg-brown/75'
           type='submit'
         >
           <p>Save</p>

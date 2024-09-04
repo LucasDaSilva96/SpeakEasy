@@ -32,7 +32,7 @@ export default function SearchPersonCard({
     }
   };
   return (
-    <div className='flex items-center justify-evenly bg-slate-50 py-4 px-1'>
+    <div className='flex items-center justify-evenly bg-white py-4 px-1 rounded-md'>
       <div className='w-12 h-12 relative rounded-full overflow-clip'>
         <Image
           src={person.image || '/default-avatar.png'}
@@ -51,7 +51,12 @@ export default function SearchPersonCard({
         <p className='text-sm'>{person.email}</p>
       </div>
       <div>
-        <Button onClick={handleAddFriend} size={'sm'} disabled={loading}>
+        <Button
+          className='bg-brown'
+          onClick={handleAddFriend}
+          size={'sm'}
+          disabled={loading}
+        >
           {!loading ? (
             <Plus size={20} />
           ) : (

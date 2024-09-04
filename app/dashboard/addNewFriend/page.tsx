@@ -34,18 +34,18 @@ export default function Add_New_Friend_Page() {
     }
   };
   return (
-    <section className='flex flex-col gap-4 w-full py-6 px-2'>
+    <section className='flex flex-col gap-4 w-full py-6 px-2 text-black'>
       <div className='flex items-center gap-2'>
         <Input
           ref={inputRef}
           type='text'
           minLength={0}
           placeholder='Search for users'
-          className='bg-slate-300 rounded-md py-1 px-1'
+          className='bg-white rounded-md py-1 px-1'
         />
         <Button
           disabled={loading}
-          className='bg-blue flex-center gap-1'
+          className='bg-brown flex-center gap-1'
           onClick={handleSearch}
         >
           {loading ? 'Searching' : 'Search'}

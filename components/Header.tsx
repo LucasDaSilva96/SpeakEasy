@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Button } from './ui/button';
-import AvatarCircles from './magicui/avatar-circles';
 import { Loader2Icon, LogOutIcon } from 'lucide-react';
 import { logout } from '@/lib/actions/login.actions';
 import toast from 'react-hot-toast';
@@ -48,25 +47,25 @@ export default function Header({ user }: { user: UserType | null }) {
             ) : (
               <div className='w-2 h-2 rounded-full bg-gray-400/50' />
             )}
-            <p className='font-extralight text-xs text-gray-500'>
+            <p className='font-extralight text-xs text-white'>
               {user?.first_name}
             </p>
           </div>
         </div>
-        <Badge className='bg-blue max-h-6 self-end hover:bg-blue'>
-          <span>{user?.native_language.name}</span>
+        <Badge className='bg-brown max-h-6 text-white self-end hover:bg-brown'>
+          <span className='font-extralight'>{user?.native_language.name}</span>
         </Badge>
       </aside>
-      <div className='flex-center gap-10'>
+      <div className='flex-center gap-4'>
         <NotificationHeader />
         <Button
           disabled={loading}
-          className='bg-blue flex-center gap-1'
+          className='flex-center gap-1 bg-white text-black hover:bg-gray-100'
           onClick={handleLogout}
         >
           <span className='hidden md:inline'>Logout</span>
           {loading ? (
-            <Loader2Icon size={18} className='animate-spin text-white' />
+            <Loader2Icon size={18} className='animate-spin' />
           ) : (
             <LogOutIcon size={18} />
           )}

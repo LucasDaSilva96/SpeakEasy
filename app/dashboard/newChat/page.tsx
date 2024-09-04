@@ -14,7 +14,7 @@ export default async function New_Chat_Page() {
         <div className='flex-center-col gap-6'>
           <h1 className='text-center text-xl'>No friends added yet</h1>
           <Link href='/dashboard/addNewFriend'>
-            <Button className='bg-blue flex-center gap-0.5'>
+            <Button className='bg-brown flex-center gap-0.5'>
               <span>
                 <UserRoundPlusIcon size={18} />
               </span>

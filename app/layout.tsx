@@ -32,20 +32,20 @@ export default async function RootLayout({
             },
             success: {
               style: {
-                backgroundColor: '#2dc653',
+                backgroundColor: '#000',
                 color: '#ffffff',
               },
             },
             loading: {
               style: {
-                backgroundColor: '#168AFF',
-                color: '#fff',
+                backgroundColor: '#000',
+                color: '#beb7a4',
               },
             },
             error: {
               style: {
-                backgroundColor: '#FF6070',
-                color: '#fff',
+                backgroundColor: '#000',
+                color: '#fc0000',
               },
             },
           }}

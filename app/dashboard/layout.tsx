@@ -32,25 +32,25 @@ export default async function DashboardLayout({
           },
           success: {
             style: {
-              backgroundColor: '#2dc653',
+              backgroundColor: '#000',
               color: '#ffffff',
             },
           },
           loading: {
             style: {
-              backgroundColor: '#168AFF',
-              color: '#fff',
+              backgroundColor: '#000',
+              color: '#beb7a4',
             },
           },
           error: {
             style: {
-              backgroundColor: '#FF6070',
-              color: '#fff',
+              backgroundColor: '#000',
+              color: '#fc0000',
             },
           },
         }}
       />
-      <div className='w-full h-screen flex flex-col relative'>
+      <div className='w-full h-screen flex flex-col relative bg-black text-white'>
         <Header user={user} />
         {children}
         <Footer />

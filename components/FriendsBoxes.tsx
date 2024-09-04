@@ -60,7 +60,7 @@ export default function FriendsBoxes({
         value={search}
         onChange={(e) => filterFriends(e.target.value)}
         placeholder='Search for friends'
-        className='bg-slate-300 rounded-md py-1 px-1'
+        className='bg-white rounded-md py-1 px-1 text-black'
       />
       <motion.ul className='w-full flex flex-wrap gap-6 mt-2 max-h-[70dvh]  overflow-y-auto'>
         {friendsList.length > 0 ? (
@@ -89,7 +89,7 @@ export default function FriendsBoxes({
                       }`}
                     />
 
-                    <p className='font-extralight text-xs text-gray-500'>
+                    <p className='font-extralight text-xs text-white'>
                       {friend.first_name}
                     </p>
                   </motion.div>
@@ -101,7 +101,7 @@ export default function FriendsBoxes({
                     disabled={loading}
                     onClick={async () => await deleteFriend(friend.id)}
                     variant={'default'}
-                    className='w-8 p-0 h-8'
+                    className='w-8 p-0 h-8 bg-brown'
                   >
                     <UserMinus size={20} />
                   </Button>
