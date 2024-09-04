@@ -88,6 +88,8 @@ export default function NotificationHeader() {
                     alt={fr.first_name + 'profile'}
                     width={48}
                     height={48}
+                    loading='eager'
+                    sizes='(max-width: 200px) 100vw, (max-width: 300px) 50vw, 33vw'
                     className='rounded-full border p-1 border-blue'
                   />
                   <div>

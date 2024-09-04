@@ -41,7 +41,7 @@ export default function UserCard({
             >
               <AvatarCircles
                 avatarUrls={[user?.image || '/default-avatar.png']}
-                className={`bg-slate-200/50 p-1 rounded-full border-2 ${
+                className={`bg-slate-200/50 rounded-full border-2 ${
                   user.status ? 'border-green-600/70' : 'border-gray-300/50'
                 }`}
               />

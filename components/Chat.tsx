@@ -135,7 +135,9 @@ export default function Chat({ friend, user, conversationID }: ChatProps) {
             <Image
               src={friend?.image || '/default-avatar.png'}
               alt={friend?.first_name + 'profile image'}
+              loading='lazy'
               fill
+              sizes='(max-width: 200px) 100vw, (max-width: 300px) 50vw, 33vw'
               style={{
                 objectFit: 'cover',
               }}

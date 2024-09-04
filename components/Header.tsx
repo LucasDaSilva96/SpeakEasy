@@ -34,6 +34,8 @@ export default function Header({ user }: { user: UserType | null }) {
               src={user?.image || '/default-avatar.png'}
               alt={user?.first_name + 'profile image'}
               fill
+              sizes='(max-width: 200px) 100vw, (max-width: 300px) 50vw, 33vw'
+              priority
               style={{
                 objectFit: 'cover',
               }}

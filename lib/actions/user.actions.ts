@@ -5,6 +5,7 @@ import { getLoggedInUser } from './login.actions';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { revalidate } from '../revalidation';
+import sharp from 'sharp';
 
 export const getUser = async (id: string) => {
   try {
@@ -233,6 +234,8 @@ export const removeFriend = async (friendId: string) => {
 
     if (error) throw new Error(error.message);
 
+    await deleteConversation(friendId);
+
     revalidatePath('/dashboard', 'layout');
   } catch (e: any) {
     console.error(e);
@@ -271,7 +274,7 @@ export const updateAccount = async (formData: FormData) => {
     const user = await getLoggedInUser();
     const supabase = await createClient_server();
 
-    const image = (formData.get('image') as File) || null;
+    let image = (formData.get('image') as File) || null;
     const password = (formData.get('password') as string) || null;
     const email = formData.get('email') as string;
     const native_language = formData.get('nativeLanguage') as string;
@@ -297,9 +300,12 @@ export const updateAccount = async (formData: FormData) => {
     // Update the user's image
     if (image) {
       if (image.size > 1024 * 1024 * 2) {
-        throw new Error('Image must be less than 2MB');
+        const bytes = await image.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const compressedImage = await sharp(buffer).resize(200, 200).toBuffer();
+        image = new File([compressedImage], image.name, { type: image.type });
       }
-      const { data, error } = await supabase.storage
+      const { error } = await supabase.storage
         .from('avatars')
         .upload(`images/${user.id}`, image, {
           upsert: true,

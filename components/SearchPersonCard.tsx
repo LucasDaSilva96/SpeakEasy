@@ -33,15 +33,19 @@ export default function SearchPersonCard({
   };
   return (
     <div className='flex items-center justify-evenly bg-slate-50 py-4 px-1'>
-      <div className=''>
+      <div className='w-12 h-12 relative rounded-full overflow-clip'>
         <Image
           src={person.image || '/default-avatar.png'}
           alt={person.first_name + 'profile'}
-          width={48}
-          height={48}
-          className='rounded-full border p-1 border-blue'
+          fill
+          sizes='(max-width: 200px) 100vw, (max-width: 300px) 50vw, 33vw'
+          loading='lazy'
+          style={{
+            objectFit: 'cover',
+          }}
         />
       </div>
+
       <div className='text-center'>
         <h1>{person.first_name + ' ' + person.last_name}</h1>
         <p className='text-sm'>{person.email}</p>

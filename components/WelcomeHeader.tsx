@@ -18,8 +18,9 @@ export default function WelcomeHeader() {
             src={'/header_logo.jpg'}
             alt='logo'
             fill
-            sizes='42px'
             className='rounded-lg'
+            loading='eager'
+            sizes='(max-width: 200px) 100vw, (max-width: 300px) 50vw, 33vw'
           />
         </div>
         <h1 className='font-semibold text-white text-3xl '>SpeakEasy</h1>

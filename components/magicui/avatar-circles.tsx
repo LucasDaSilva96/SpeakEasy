@@ -22,6 +22,7 @@ const AvatarCircles = ({ className, avatarUrls }: AvatarCirclesProps) => {
           width={40}
           height={40}
           alt={`Avatar ${index + 1}`}
+          loading='lazy'
         />
       ))}
     </div>

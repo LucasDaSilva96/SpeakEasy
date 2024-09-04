@@ -38,6 +38,7 @@ export default function UserConversationBox({
   };
 
   useEffect(() => {
+    if (!conversation.messages || conversation.messages.length === 0) return;
     (async () => {
       try {
         setIsLoading(true);
@@ -54,7 +55,9 @@ export default function UserConversationBox({
         toast.error('Error translating message');
       }
     })();
-  }, [conversation.messages.length, lastMessage.message, lastMessage.language]);
+  }, [conversation.messages.length]);
+
+  if (!conversation.messages || conversation.messages.length === 0) return null;
 
   return (
     <div className='relative'>
@@ -66,13 +69,19 @@ export default function UserConversationBox({
           whileTap={{ scale: 0.98 }}
           className='flex items-center gap-2 p-2 bg-slate-300 rounded-md cursor-pointer'
         >
-          <Image
-            src={conversation.friend_profile_image}
-            alt='profile image'
-            width={50}
-            height={50}
-            className='rounded-full'
-          />
+          <div className='w-12 h-12 relative rounded-full overflow-clip'>
+            <Image
+              src={conversation.friend_profile_image}
+              alt='profile image'
+              priority
+              fill
+              sizes='(max-width: 200px) 100vw, (max-width: 300px) 50vw, 33vw'
+              style={{
+                objectFit: 'cover',
+              }}
+            />
+          </div>
+
           <div className='flex flex-col gap-1'>
             <h1 className='font-light text-[0.8rem]'>
               {conversation.friend_name}

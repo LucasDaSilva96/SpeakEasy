@@ -9,7 +9,7 @@ export default function SideNavigation() {
   const path = usePathname();
 
   return (
-    <nav className='min-w-[180px] h-full bg-slate-200 p-2 flex flex-col gap-2 items-start'>
+    <nav className='min-w-[180px] h-full bg-slate-200 p-2 flex-center  gap-2'>
       <Link
         href='/dashboard/profile'
         className={`${

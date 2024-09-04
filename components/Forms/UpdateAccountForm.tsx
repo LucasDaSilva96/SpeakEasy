@@ -100,7 +100,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className='flex-center-col gap-6'
+        className='flex-center-col gap-6 bg-slate-300 p-1 rounded-md'
       >
         <div className='flex-center gap-2'>
           <Input
@@ -108,13 +108,15 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
             type='file'
             accept='image/*'
             onChange={handleChange}
-            className='max-w-[200px] overflow-hidden cursor-pointer border  hover:border-blue hover:shadow-blue'
+            className='max-w-[200px] overflow-hidden cursor-pointer border hover:border-blue hover:shadow-blue'
           />
           <div className='w-32 h-32 relative rounded-full overflow-clip'>
             <Image
+              sizes='(max-width: 200px) 100vw, (max-width: 300px) 50vw, 33vw'
               src={image}
               alt={user.first_name + 'profile image'}
               fill
+              loading='eager'
               style={{
                 objectFit: 'cover',
               }}
@@ -132,7 +134,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
                   <Input
                     type='text'
                     autoComplete='given-name'
-                    className='bg-black/75 transition-colors ease-in  focus:bg-black border-none'
+                    className=' transition-colors ease-in  border-none'
                     placeholder='John'
                     {...field}
                   />
@@ -155,7 +157,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
                   <Input
                     type='text'
                     autoComplete='family-name'
-                    className='bg-black/75 transition-colors ease-in  focus:bg-black border-none'
+                    className=' transition-colors ease-in  border-none'
                     placeholder='Doe'
                     {...field}
                   />
@@ -180,7 +182,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
                   <Input
                     type='email'
                     autoComplete='email'
-                    className='bg-black/75 transition-colors ease-in  focus:bg-black border-none'
+                    className=' transition-colors ease-in  border-none'
                     placeholder='example@io.com'
                     {...field}
                   />
@@ -203,12 +205,12 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
                   onValueChange={field.onChange}
                   defaultValue={user.native_language.id.toString()}
                 >
-                  <FormControl className='bg-black/75 focus:bg-black border-none'>
+                  <FormControl className=' border-none'>
                     <SelectTrigger>
                       <SelectValue placeholder='Select language' />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent className='bg-black/75 border-none max-h-[45vh]'>
+                  <SelectContent className=' border-none max-h-[40vh]'>
                     {languages.length > 0 &&
                       languages.map((lang) => (
                         <SelectItem key={lang.id} value={`${lang.id}`}>
@@ -237,7 +239,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
                   <Input
                     type='password'
                     autoComplete='current-password'
-                    className='bg-black/75 transition-colors ease-in  focus:bg-black border-none'
+                    className='transition-colors ease-in border-none'
                     placeholder='password'
                     {...field}
                   />
