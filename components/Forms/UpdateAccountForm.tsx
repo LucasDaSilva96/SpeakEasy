@@ -22,7 +22,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';
 import { LanguageType } from '@/types/language.types';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Minus, UserRoundX } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { getAvailableLanguages } from '@/lib/actions/languages.actions';
 import { UserType } from '@/types/user.types';
@@ -259,18 +259,34 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
           />
         </div>
         {/*  */}
-        <Button
-          disabled={loading}
-          className='flex items-center gap-1 bg-brown hover:bg-brown/75'
-          type='submit'
-        >
-          <p>Save</p>
-          {loading && (
-            <span>
-              <Loader2 size={16} className='animate-spin' />
-            </span>
-          )}
-        </Button>
+        <div className='w-full flex items-center justify-around'>
+          <Button
+            disabled={loading}
+            className='flex items-center gap-1 bg-brown hover:bg-brown/75'
+            type='submit'
+          >
+            <p>Save</p>
+            {loading && (
+              <span>
+                <Loader2 size={16} className='animate-spin' />
+              </span>
+            )}
+          </Button>
+
+          <Button disabled={loading} variant={'secondary'} type='submit'>
+            <p className='flex-center gap-1'>
+              <span>Delete account</span>
+              <span>
+                <UserRoundX />
+              </span>
+            </p>
+            {loading && (
+              <span>
+                <Loader2 size={16} className='animate-spin' />
+              </span>
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );

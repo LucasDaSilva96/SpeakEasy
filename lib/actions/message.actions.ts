@@ -50,6 +50,8 @@ export const sendMessage = async ({
   friend_id,
 }: Message) => {
   try {
+    if (!conversation_id || !language || !message || !friend_id)
+      throw new Error('Invalid message data');
     const supabase = await createClient_server();
     const user = await getLoggedInUser();
 
@@ -67,9 +69,23 @@ export const sendMessage = async ({
 
     const { data, error } = await supabase
       .from('messages')
-      .insert([{ conversation_id, sender_id: user.id, message, language }])
+      .insert([
+        {
+          conversation_id: conversation_id,
+          sender_id: user.id,
+          message: message,
+          language: language,
+        },
+      ])
       .select();
     if (error) throw new Error(error.message);
+
+    const { error: err } = await supabase
+      .from('conversations')
+      .update({ last_message_time: new Date().toISOString() })
+      .eq('id', conversation_id);
+
+    if (err) throw new Error(err.message);
 
     return data;
   } catch (e: any) {
@@ -118,14 +134,18 @@ export const getDashboardConversations = async () => {
     const { data: messages, error: messagesError } = await supabase
       .from('messages')
       .select('*')
-      .eq('conversation_id', conversations[0].id);
+      .in(
+        'conversation_id',
+        conversations.map((c) => c.id)
+      );
 
     if (messagesError) throw new Error(messagesError.message);
     if (!messages) return [];
 
     const { data: users, error: usersError } = await supabase
       .from('users')
-      .select('*');
+      .select('*')
+      .in('id', conversations.map((c) => c.user_ids).flat());
 
     if (usersError) throw new Error(usersError.message);
 
@@ -135,20 +155,30 @@ export const getDashboardConversations = async () => {
       );
 
       const friend = users.find((user) => user.id === friendId);
+
+      const msg = messages.filter(
+        (message) => message.conversation_id === conversation.id
+      );
+
       return {
         conversation_id: conversation.id,
-        messages: messages.map((message) => {
-          if (message.conversation_id === conversation.id) {
-            return message;
-          }
-        }),
+        messages: msg,
         friend_id: friendId,
         friend_name: friend?.first_name || '',
         friend_profile_image: friend?.image || '/default-avatar.png',
+        last_message_time: conversation.last_message_time,
       };
     });
 
     if (!conversationsData || !conversations.length) return [];
+
+    conversationsData.sort((a, b) => {
+      if (!a.last_message_time || !b.last_message_time) return 0;
+      return (
+        new Date(b.last_message_time).getTime() -
+        new Date(a.last_message_time).getTime()
+      );
+    });
 
     return conversationsData as Conversation[];
   } catch (e: any) {

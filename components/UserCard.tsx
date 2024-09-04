@@ -4,6 +4,7 @@ import AvatarCircles from './magicui/avatar-circles';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { UserFriendType, UserType } from '@/types/user.types';
+import Image from 'next/image';
 
 export default function UserCard({
   users,
@@ -37,16 +38,24 @@ export default function UserCard({
           >
             <motion.div
               whileTap={{ scale: 0.9 }}
-              className='text-center cursor-pointer'
+              className={`bg-transparent rounded-full text-center ${
+                user.status ? 'border-green-600/70' : 'border-gray-300/50'
+              }`}
             >
-              <AvatarCircles
-                avatarUrls={[user?.image || '/default-avatar.png']}
-                className={`bg-slate-200/50 rounded-full border-2 ${
-                  user.status ? 'border-green-600/70' : 'border-gray-300/50'
-                }`}
-              />
+              <div className='w-12 h-12 relative rounded-full overflow-clip'>
+                <Image
+                  src={user?.image || '/default-avatar.png'}
+                  alt={user?.first_name + 'profile image'}
+                  fill
+                  sizes='(max-width: 200px) 100vw, (max-width: 300px) 50vw, 33vw'
+                  priority
+                  style={{
+                    objectFit: 'cover',
+                  }}
+                />
+              </div>
 
-              <p className='font-extralight text-xs text-gray-500'>
+              <p className='font-extralight text-xs text-white'>
                 {user.first_name}
               </p>
             </motion.div>

@@ -130,7 +130,7 @@ export default function Chat({ friend, user, conversationID }: ChatProps) {
     <section className='w-full p-2 relative flex flex-col'>
       {isMounted && <BigLoaderScreen />}
       <header className='w-full flex items-center gap-x-2.5'>
-        <div className='ml-auto flex items-center gap-1.5 rounded-xl shadow-sm bg-slate-200 p-1 min-w-[150px]'>
+        <div className='ml-auto flex items-center gap-1.5 rounded-xl shadow-sm bg-brown py-1 px-4'>
           <div className='w-12 h-12 relative rounded-full overflow-clip'>
             <Image
               src={friend?.image || '/default-avatar.png'}
@@ -160,7 +160,7 @@ export default function Chat({ friend, user, conversationID }: ChatProps) {
             disabled={loading}
             onClick={deleteFriend}
             variant={'default'}
-            className='w-10 p-0 h-11'
+            className='w-10 p-0 h-11 bg-white/50 rounded-full'
           >
             <UserMinus size={20} />
           </Button>
@@ -204,7 +204,7 @@ export default function Chat({ friend, user, conversationID }: ChatProps) {
         <Textarea
           ref={message}
           placeholder='Type your message here.'
-          className='bg-slate-200 outline-none outline-offset-0 border-none'
+          className='bg-slate-200 outline-none outline-offset-0 border-none text-black'
         />
         <Button
           disabled={loading}

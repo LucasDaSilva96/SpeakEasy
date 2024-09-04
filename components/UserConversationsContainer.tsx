@@ -38,7 +38,12 @@ export default function UserConversationBox({
   };
 
   useEffect(() => {
-    if (!conversation.messages || conversation.messages.length === 0) return;
+    if (
+      !conversation.messages ||
+      conversation.messages.length === 0 ||
+      !lastMessage
+    )
+      return;
     (async () => {
       try {
         setIsLoading(true);
@@ -67,7 +72,7 @@ export default function UserConversationBox({
       >
         <motion.div
           whileTap={{ scale: 0.98 }}
-          className='flex items-center gap-2 p-2 bg-slate-300 rounded-md cursor-pointer'
+          className={`flex items-center gap-2 p-2 bg-white rounded-md cursor-pointer`}
         >
           <div className='w-12 h-12 relative rounded-full overflow-clip'>
             <Image
@@ -83,7 +88,7 @@ export default function UserConversationBox({
           </div>
 
           <div className='flex flex-col gap-1'>
-            <h1 className='font-light text-[0.8rem]'>
+            <h1 className=' text-[0.8rem] text-black font-semibold'>
               {conversation.friend_name}
             </h1>
             <div className='text-sm text-slate-500 flex flex-col'>
@@ -96,11 +101,11 @@ export default function UserConversationBox({
               </Badge>
               <div className='flex items-center gap-1 font-extralight text-[0.7rem]'>
                 <span>
-                  {lastMessage.sender_id === conversation.friend_id
+                  {lastMessage?.sender_id === conversation.friend_id
                     ? conversation.friend_name
                     : 'You'}
                 </span>
-                <span>{formatDate(lastMessage.created_at)}</span>
+                <span>{formatDate(lastMessage?.created_at)}</span>
               </div>
             </div>
           </div>

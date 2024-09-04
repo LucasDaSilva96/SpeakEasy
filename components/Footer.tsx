@@ -100,7 +100,7 @@ function ToolTip({ label, className }: { label: string; className?: string }) {
   return (
     <div
       className={cn(
-        'absolute text-blue transition-all duration-300 ease-linear top-[-1.65rem] hidden will-change-auto',
+        'absolute text-brown transition-all duration-300 ease-linear top-[-1.65rem] hidden will-change-auto',
         className
       )}
     >

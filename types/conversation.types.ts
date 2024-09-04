@@ -13,4 +13,5 @@ export interface ConversationTypeDB {
   created_at: string;
   user_ids: string[];
   user_deleted_con_id: string;
+  last_message_time: string;
 }
