@@ -1,6 +1,5 @@
 'use server';
 
-// TODO Move this to the API folder, and make it a server route.
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
@@ -8,7 +7,7 @@ export async function createClient_server() {
   const cookieStore = cookies();
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
       cookies: {
         getAll() {

@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { revalidate } from '../revalidation';
 import sharp from 'sharp';
+import { cookies } from 'next/headers';
 
 export const getUser = async (id: string) => {
   try {
@@ -15,6 +16,17 @@ export const getUser = async (id: string) => {
       .select('*')
       .eq('id', id)
       .single();
+
+    if (data === null)
+      return {
+        id: '',
+        email: '',
+        first_name: 'User no longer exists',
+        last_name: '',
+        native_language: '',
+        image: null,
+        status: false,
+      };
 
     if (error) throw new Error(error.message);
 
@@ -35,6 +47,8 @@ export const getUser = async (id: string) => {
       image: data.image,
       status: data.status,
     };
+
+    console.log(resObj);
 
     return resObj;
   } catch (e: any) {
@@ -340,4 +354,54 @@ export const updateAccount = async (formData: FormData) => {
     throw new Error(e.message);
   }
   return revalidatePath('/dashboard/profile', 'layout');
+};
+
+export const deleteAccount = async () => {
+  try {
+    // Get the cookies
+    const cookieStore = cookies();
+    // Get the auth logged in user
+    const supabase = await createClient_server();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error('User not found');
+    // Get the user's data
+    const { data: LoggedInUser, error: loggedInError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', user.email)
+      .limit(1)
+      .single();
+
+    // Error handling
+    if (loggedInError) throw new Error(loggedInError.message);
+    const { error } = await supabase.auth.admin.deleteUser(user.id!);
+    if (error) throw new Error(error.message);
+
+    // Delete the user's friendships
+    const { error: friendShipError } = await supabase
+      .from('friendships')
+      .delete()
+      .contains('users', [LoggedInUser.id]);
+
+    if (friendShipError) throw new Error(friendShipError.message);
+
+    // Delete the user from DB
+    const { error: userError } = await supabase
+      .from('users')
+      .delete()
+      .eq('email', user.email);
+
+    if (userError) throw new Error(userError.message);
+
+    // Delete the user's cookies
+    cookieStore.getAll().forEach((cookie) => {
+      cookieStore.delete(cookie.name);
+    });
+  } catch (e: any) {
+    console.error(e);
+    throw new Error(e.message);
+  }
+  return redirect('/');
 };

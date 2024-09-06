@@ -19,6 +19,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';
 import { LanguageType } from '@/types/language.types';
@@ -28,7 +39,8 @@ import { getAvailableLanguages } from '@/lib/actions/languages.actions';
 import { UserType } from '@/types/user.types';
 import { updateAccountValidation } from '@/lib/validation/updateAccountValidation';
 import Image from 'next/image';
-import { updateAccount } from '@/lib/actions/user.actions';
+import { deleteAccount, updateAccount } from '@/lib/actions/user.actions';
+import BigLoaderScreen from '../BigLoaderScreen';
 
 interface UpdateAccountFormProps {
   user: UserType;
@@ -55,6 +67,19 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
       setLanguages(languages);
     });
   }, [user.id]);
+
+  const handleDeleteAccount = async () => {
+    try {
+      setLoading(true);
+      await deleteAccount();
+      toast.success('Account deleted successfully');
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof updateAccountValidation>>({
@@ -97,197 +122,220 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className='flex-center-col gap-4 p-1 rounded-md text-black'
-      >
-        <div className='flex-center gap-2'>
-          <Input
-            name='image'
-            type='file'
-            accept='image/*'
-            onChange={handleChange}
-            className='max-w-[200px] overflow-hidden cursor-pointer border hover:border-blue hover:shadow-blue'
-          />
-          <div className='w-24 h-24 relative rounded-full overflow-clip'>
-            <Image
-              sizes='(max-width: 200px) 100vw, (max-width: 300px) 50vw, 33vw'
-              src={image}
-              alt={user.first_name + 'profile image'}
-              fill
-              loading='eager'
-              style={{
-                objectFit: 'cover',
-              }}
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='flex-center-col gap-4 p-1 rounded-md text-black'
+        >
+          <div className='flex-center gap-2'>
+            <Input
+              name='image'
+              type='file'
+              accept='image/*'
+              onChange={handleChange}
+              className='max-w-[200px] overflow-hidden cursor-pointer border hover:border-blue hover:shadow-blue'
+            />
+            <div className='w-24 h-24 relative rounded-full overflow-clip'>
+              <Image
+                sizes='(max-width: 200px) 100vw, (max-width: 300px) 50vw, 33vw'
+                src={image}
+                alt={user.first_name + 'profile image'}
+                fill
+                loading='eager'
+                style={{
+                  objectFit: 'cover',
+                }}
+              />
+            </div>
+          </div>
+          <div className='w-full flex items-start gap-2'>
+            <FormField
+              control={form.control}
+              name='firstName'
+              render={({ field }) => (
+                <FormItem className='flex flex-col w-full'>
+                  <FormLabel className='text-xs text-white'>
+                    First Name*
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='text'
+                      autoComplete='given-name'
+                      className=' transition-colors ease-in  border-none'
+                      placeholder='John'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className='hidden'>
+                    Update your first name
+                  </FormDescription>
+                  <FormMessage className='text-rose-600' />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='lastName'
+              render={({ field }) => (
+                <FormItem className='flex flex-col w-full'>
+                  <FormLabel className='text-xs text-white'>
+                    Last Name*
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='text'
+                      autoComplete='family-name'
+                      className=' transition-colors ease-in  border-none'
+                      placeholder='Doe'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className='hidden'>
+                    Update your last name
+                  </FormDescription>
+                  <FormMessage className='text-rose-600' />
+                </FormItem>
+              )}
             />
           </div>
-        </div>
-        <div className='w-full flex items-start gap-2'>
-          <FormField
-            control={form.control}
-            name='firstName'
-            render={({ field }) => (
-              <FormItem className='flex flex-col w-full'>
-                <FormLabel className='text-xs text-white'>
-                  First Name*
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='text'
-                    autoComplete='given-name'
-                    className=' transition-colors ease-in  border-none'
-                    placeholder='John'
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription className='hidden'>
-                  Update your first name
-                </FormDescription>
-                <FormMessage className='text-rose-600' />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='lastName'
-            render={({ field }) => (
-              <FormItem className='flex flex-col w-full'>
-                <FormLabel className='text-xs text-white'>Last Name*</FormLabel>
-                <FormControl>
-                  <Input
-                    type='text'
-                    autoComplete='family-name'
-                    className=' transition-colors ease-in  border-none'
-                    placeholder='Doe'
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription className='hidden'>
-                  Update your last name
-                </FormDescription>
-                <FormMessage className='text-rose-600' />
-              </FormItem>
-            )}
-          />
-        </div>
-        {/*  */}
-        <div className='flex flex-col gap-4 sm:gap-2 sm:flex-row w-full items-start'>
-          <FormField
-            control={form.control}
-            name='email'
-            render={({ field }) => (
-              <FormItem className='flex flex-col w-full'>
-                <FormLabel className='text-xs text-white'>Email*</FormLabel>
-                <FormControl>
-                  <Input
-                    type='email'
-                    autoComplete='email'
-                    className=' transition-colors ease-in  border-none'
-                    placeholder='example@io.com'
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription className='hidden'>
-                  Update your email
-                </FormDescription>
-                <FormMessage className='text-rose-600' />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='nativeLanguage'
-            render={({ field }) => (
-              <FormItem className='flex flex-col gap-0.5 w-full relative'>
-                <FormLabel className='text-white text-xs'>
-                  Native Language*
-                </FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={user.native_language.id.toString()}
-                >
-                  <FormControl className=' border-none'>
-                    <SelectTrigger>
-                      <SelectValue placeholder='Select language' />
-                    </SelectTrigger>
+          {/*  */}
+          <div className='flex flex-col gap-4 sm:gap-2 sm:flex-row w-full items-start'>
+            <FormField
+              control={form.control}
+              name='email'
+              render={({ field }) => (
+                <FormItem className='flex flex-col w-full'>
+                  <FormLabel className='text-xs text-white'>Email*</FormLabel>
+                  <FormControl>
+                    <Input
+                      type='email'
+                      autoComplete='email'
+                      className=' transition-colors ease-in  border-none'
+                      placeholder='example@io.com'
+                      {...field}
+                    />
                   </FormControl>
-                  <SelectContent className=' border-none max-h-[40vh]'>
-                    {languages.length > 0 &&
-                      languages.map((lang) => (
-                        <SelectItem key={lang.id} value={`${lang.id}`}>
-                          {lang.name}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-                <FormDescription className='hidden'>
-                  Update your native language
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        {/*  */}
-        <div className='w-full flex items-start gap-2'>
-          <FormField
-            control={form.control}
-            name='password'
-            render={({ field }) => (
-              <FormItem className='flex flex-col w-full'>
-                <FormLabel className='text-xs text-white'>
-                  Update password
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='password'
-                    autoComplete='current-password'
-                    className='transition-colors ease-in border-none'
-                    placeholder='password'
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription className='hidden'>
-                  Update your password
-                </FormDescription>
-                <FormMessage className='text-rose-600' />
-              </FormItem>
-            )}
-          />
-        </div>
-        {/*  */}
-        <div className='w-full flex items-center justify-around'>
-          <Button
-            disabled={loading}
-            className='flex items-center gap-1 bg-brown hover:bg-brown/75'
-            type='submit'
-          >
-            <p>Save</p>
-            {loading && (
-              <span>
-                <Loader2 size={16} className='animate-spin' />
-              </span>
-            )}
-          </Button>
+                  <FormDescription className='hidden'>
+                    Update your email
+                  </FormDescription>
+                  <FormMessage className='text-rose-600' />
+                </FormItem>
+              )}
+            />
 
-          <Button disabled={loading} variant={'secondary'} type='submit'>
-            <p className='flex-center gap-1'>
-              <span>Delete account</span>
-              <span>
-                <UserRoundX />
-              </span>
-            </p>
-            {loading && (
-              <span>
-                <Loader2 size={16} className='animate-spin' />
-              </span>
-            )}
-          </Button>
-        </div>
-      </form>
-    </Form>
+            <FormField
+              control={form.control}
+              name='nativeLanguage'
+              render={({ field }) => (
+                <FormItem className='flex flex-col gap-0.5 w-full relative'>
+                  <FormLabel className='text-white text-xs'>
+                    Native Language*
+                  </FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={user.native_language.id.toString()}
+                  >
+                    <FormControl className=' border-none'>
+                      <SelectTrigger>
+                        <SelectValue placeholder='Select language' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className=' border-none max-h-[40vh]'>
+                      {languages.length > 0 &&
+                        languages.map((lang) => (
+                          <SelectItem key={lang.id} value={`${lang.id}`}>
+                            {lang.name}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                  <FormDescription className='hidden'>
+                    Update your native language
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/*  */}
+          <div className='w-full flex items-start gap-2'>
+            <FormField
+              control={form.control}
+              name='password'
+              render={({ field }) => (
+                <FormItem className='flex flex-col w-full'>
+                  <FormLabel className='text-xs text-white'>
+                    Update password
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='password'
+                      autoComplete='current-password'
+                      className='transition-colors ease-in border-none'
+                      placeholder='password'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className='hidden'>
+                    Update your password
+                  </FormDescription>
+                  <FormMessage className='text-rose-600' />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/*  */}
+          <div className='w-full flex items-center justify-around'>
+            <Button
+              disabled={loading}
+              className='flex items-center gap-1 bg-brown hover:bg-brown/75'
+              type='submit'
+            >
+              <p>Save</p>
+              {loading && (
+                <span>
+                  <Loader2 size={16} className='animate-spin' />
+                </span>
+              )}
+            </Button>
+
+            <AlertDialog>
+              <AlertDialogTrigger className='bg-white text-black p-2 rounded-md'>
+                <p className='flex-center gap-1 '>
+                  <span>Delete account</span>
+                  {!loading && (
+                    <span>
+                      <UserRoundX />
+                    </span>
+                  )}
+                  {loading && (
+                    <span>
+                      <Loader2 size={16} className='animate-spin' />
+                    </span>
+                  )}
+                </p>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your account and remove your data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteAccount}>
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </form>
+      </Form>
+    </>
   );
 }

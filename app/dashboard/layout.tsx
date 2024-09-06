@@ -45,7 +45,7 @@ export default async function DashboardLayout({
           error: {
             style: {
               backgroundColor: '#000',
-              color: '#fc0000',
+              color: '#fff',
             },
           },
         }}

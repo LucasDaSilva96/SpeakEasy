@@ -16,8 +16,8 @@ export default function Footer() {
   const url = usePathname();
   const router = useRouter();
 
-  const handleRedirect = (path: string) => {
-    revalidate('/');
+  const handleRedirect = async (path: string) => {
+    await revalidate(path);
     return router.push(path);
   };
 
