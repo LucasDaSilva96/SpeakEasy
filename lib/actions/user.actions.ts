@@ -48,8 +48,6 @@ export const getUser = async (id: string) => {
       status: data.status,
     };
 
-    console.log(resObj);
-
     return resObj;
   } catch (e: any) {
     console.error(e);
