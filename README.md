@@ -25,4 +25,4 @@ SpeakEasy uses the `sharp` library to compress profile images. The compression f
 
 ## Contact
 
-For any inquiries, please contact (Lucas)[dasilvajunior881@gmail.com].
+For any inquiries, please create a pull request.
