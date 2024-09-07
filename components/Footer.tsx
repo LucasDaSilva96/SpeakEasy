@@ -10,14 +10,13 @@ import {
 import { usePathname, useRouter } from 'next/navigation';
 import { Dock, DockIcon } from './magicui/dock';
 import { cn } from '@/lib/utils';
-import { revalidate } from '@/lib/revalidation';
+import Link from 'next/link';
 
 export default function Footer() {
   const url = usePathname();
   const router = useRouter();
 
   const handleRedirect = async (path: string) => {
-    await revalidate(path);
     return router.push(path);
   };
 
@@ -42,10 +41,12 @@ export default function Footer() {
               : 'bg-transparent shadow-none'
           } p-2 flex-center group hover:bg-brown`}
         >
-          <HomeIcon
-            className='size-full'
-            onClick={() => handleRedirect('/dashboard')}
-          />
+          <Link href={'/dashboard'}>
+            <HomeIcon
+              className='size-full'
+              // onClick={() => handleRedirect('/dashboard')}
+            />
+          </Link>
 
           <ToolTip label='Home' className='group-hover:md:inline' />
         </DockIcon>
@@ -56,10 +57,12 @@ export default function Footer() {
               : 'bg-transparent shadow-none'
           } p-2 flex-center group hover:bg-brown`}
         >
-          <MessageCircleMoreIcon
-            className='size-full z-10'
-            onClick={() => handleRedirect('/dashboard/newChat')}
-          />
+          <Link href={'/dashboard/newChat'}>
+            <MessageCircleMoreIcon
+              className='size-full z-10'
+              // onClick={() => handleRedirect('/dashboard/newChat')}
+            />
+          </Link>
 
           <ToolTip label='New Chat' className='group-hover:md:inline' />
         </DockIcon>
@@ -70,10 +73,12 @@ export default function Footer() {
               : 'bg-transparent shadow-none'
           } p-2 flex-center group hover:bg-brown`}
         >
-          <UserRoundPlusIcon
-            className='size-full'
-            onClick={() => handleRedirect('/dashboard/addNewFriend')}
-          />
+          <Link href={'/dashboard/addNewFriend'}>
+            <UserRoundPlusIcon
+              className='size-full'
+              // onClick={() => handleRedirect('/dashboard/addNewFriend')}
+            />
+          </Link>
 
           <ToolTip label='Add Friend' className='group-hover:md:inline' />
         </DockIcon>
@@ -84,10 +89,12 @@ export default function Footer() {
               : 'bg-transparent shadow-none'
           } p-2 flex-center group hover:bg-brown`}
         >
-          <UserCogIcon
-            className='size-full'
-            onClick={() => handleRedirect('/dashboard/profile')}
-          />
+          <Link href={'/dashboard/profile'}>
+            <UserCogIcon
+              className='size-full'
+              // onClick={() => handleRedirect('/dashboard/profile')}
+            />
+          </Link>
 
           <ToolTip label='Account' className='group-hover:md:inline' />
         </DockIcon>
