@@ -351,7 +351,6 @@ export const updateAccount = async (formData: FormData) => {
     console.log(e);
     throw new Error(e.message);
   }
-  return revalidatePath('/dashboard/profile', 'layout');
 };
 
 export const deleteAccount = async () => {
