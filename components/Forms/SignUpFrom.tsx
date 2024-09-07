@@ -73,7 +73,7 @@ export default function SignUpForm({ setState }: SignUpFormProps) {
 
       await signup(formData);
 
-      toast.success('User created successfully. Please verify your email');
+      toast.success('User created successfully✨');
       setState('login');
     } catch (e: any) {
       console.error(e);
