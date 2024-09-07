@@ -6,6 +6,7 @@ import { UserFriendType } from '@/types/user.types';
 import { getDashboardConversations } from '@/lib/actions/message.actions';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 10;
 
 export default async function Dashboard() {
   const friends = (await getUserFriends()) as unknown as UserFriendType[];
