@@ -9,6 +9,8 @@ import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import toast from 'react-hot-toast';
 
+export const dynamic = 'force-dynamic';
+
 export default function Add_New_Friend_Page() {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [users, setUsers] = React.useState<UserType[]>([]);

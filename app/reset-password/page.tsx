@@ -18,8 +18,9 @@ import { Loader2 } from 'lucide-react';
 
 import toast from 'react-hot-toast';
 import { useSearchParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { resetPassword } from '@/lib/actions/login.actions';
+
+export const dynamic = 'force-dynamic';
 
 const passwordSchema = z
   .object({

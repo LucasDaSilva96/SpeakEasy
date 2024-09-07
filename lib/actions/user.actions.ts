@@ -354,9 +354,9 @@ export const updateAccount = async (formData: FormData) => {
 };
 
 export const deleteAccount = async () => {
+  const cookieStore = cookies();
   try {
     // Get the cookies
-    const cookieStore = cookies();
     // Get the auth logged in user
     const supabase = await createClient_server();
     const {

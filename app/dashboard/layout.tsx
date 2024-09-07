@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description:
     'A chat app for everyone and from everywhere. SpeakEasy is a chat app that allows you to chat with anyone from anywhere in the world. It is a simple and easy-to-use chat app that allows you to chat with anyone from anywhere in the world.',
 };
+export const dynamic = 'force-dynamic';
 
 export default async function DashboardLayout({
   children,
