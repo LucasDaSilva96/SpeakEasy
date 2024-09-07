@@ -7,18 +7,13 @@ import {
   UserCogIcon,
   UserRoundPlusIcon,
 } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { Dock, DockIcon } from './magicui/dock';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
 export default function Footer() {
   const url = usePathname();
-  const router = useRouter();
-
-  const handleRedirect = async (path: string) => {
-    return router.push(path);
-  };
 
   return (
     <motion.footer
@@ -42,10 +37,7 @@ export default function Footer() {
           } p-2 flex-center group hover:bg-brown`}
         >
           <Link href={'/dashboard'}>
-            <HomeIcon
-              className='size-full'
-              // onClick={() => handleRedirect('/dashboard')}
-            />
+            <HomeIcon className='size-full' />
           </Link>
 
           <ToolTip label='Home' className='group-hover:md:inline' />
@@ -58,10 +50,7 @@ export default function Footer() {
           } p-2 flex-center group hover:bg-brown`}
         >
           <Link href={'/dashboard/newChat'}>
-            <MessageCircleMoreIcon
-              className='size-full z-10'
-              // onClick={() => handleRedirect('/dashboard/newChat')}
-            />
+            <MessageCircleMoreIcon className='size-full z-10' />
           </Link>
 
           <ToolTip label='New Chat' className='group-hover:md:inline' />
@@ -74,10 +63,7 @@ export default function Footer() {
           } p-2 flex-center group hover:bg-brown`}
         >
           <Link href={'/dashboard/addNewFriend'}>
-            <UserRoundPlusIcon
-              className='size-full'
-              // onClick={() => handleRedirect('/dashboard/addNewFriend')}
-            />
+            <UserRoundPlusIcon className='size-full' />
           </Link>
 
           <ToolTip label='Add Friend' className='group-hover:md:inline' />
@@ -90,10 +76,7 @@ export default function Footer() {
           } p-2 flex-center group hover:bg-brown`}
         >
           <Link href={'/dashboard/profile'}>
-            <UserCogIcon
-              className='size-full'
-              // onClick={() => handleRedirect('/dashboard/profile')}
-            />
+            <UserCogIcon className='size-full' />
           </Link>
 
           <ToolTip label='Account' className='group-hover:md:inline' />
