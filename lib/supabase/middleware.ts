@@ -12,7 +12,12 @@ export async function updateSession(request: NextRequest) {
     {
       cookies: {
         getAll() {
-          return request.cookies.getAll();
+          const cookieData = request.cookies.getAll();
+          return new Promise((resolve) =>
+            setTimeout(() => {
+              resolve(cookieData);
+            }, 1000)
+          );
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) =>
