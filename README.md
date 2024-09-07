@@ -19,13 +19,6 @@ SpeakEasy is a chat application designed to facilitate seamless global communica
 3. **Update Profile**: Upload a profile picture and update your personal information.
 4. **Chat**: Start chatting with other users in real-time.
 
-## API Endpoints
-
-- **GET /api/users**: Retrieve a list of users.
-- **POST /api/users**: Create a new user.
-- **PUT /api/users/:id**: Update user information.
-- **DELETE /api/users/:id**: Delete a user.
-
 ## Image Compression
 
 SpeakEasy uses the `sharp` library to compress profile images. The compression function reduces the image size while maintaining quality, ensuring optimal performance and storage usage.
