@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { UserFriendType, UserType } from '@/types/user.types';
 import toast from 'react-hot-toast';
 import { createClient_browser } from '@/lib/supabase/client';
-import { UserMinus } from 'lucide-react';
+import { Loader2Icon, UserMinus } from 'lucide-react';
 import { TooltipComponent } from './ToolTipComponent';
 import { removeFriend } from '@/lib/actions/user.actions';
 import {
@@ -171,7 +171,11 @@ export default function Chat({ friend, user, conversationID }: ChatProps) {
               variant={'default'}
               className='w-10 p-0 h-11 bg-white/50 rounded-full'
             >
-              <UserMinus size={20} />
+              {!loading ? (
+                <UserMinus size={20} />
+              ) : (
+                <Loader2Icon size={20} className='animate-spin' />
+              )}
             </Button>
           </TooltipComponent>
         )}
