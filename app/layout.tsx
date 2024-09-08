@@ -10,8 +10,6 @@ export const metadata: Metadata = {
   description: 'A chat app for everyone and from everywhere.',
 };
 
-export const dynamic = 'force-dynamic';
-
 export default async function RootLayout({
   children,
 }: Readonly<{

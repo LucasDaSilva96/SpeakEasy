@@ -10,8 +10,6 @@ import { Badge } from '@/components/ui/badge';
 import NotificationHeader from './NotificationHeader';
 import Image from 'next/image';
 
-export const revalidate = 30;
-
 export default function Header({ user }: { user: UserType | null }) {
   const [loading, setLoading] = React.useState(false);
 

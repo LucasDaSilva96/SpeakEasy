@@ -2,8 +2,6 @@ import SideNavigation from '@/components/SideNavigation';
 import React from 'react';
 import { Toaster } from 'react-hot-toast';
 
-export const dynamic = 'force-dynamic';
-
 export default async function DashboardLayout({
   children,
 }: Readonly<{

@@ -130,7 +130,7 @@ export const getLoggedInUser = async () => {
 
     if (error) throw new Error(error.message);
 
-    if (!data || !data.user) throw new Error('User not found');
+    if (!data || !data.user) return redirect('/auth');
 
     let { data: userData, error: userError } = await supabase
       .from('users')

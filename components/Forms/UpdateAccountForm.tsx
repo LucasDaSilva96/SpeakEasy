@@ -40,7 +40,6 @@ import { UserType } from '@/types/user.types';
 import { updateAccountValidation } from '@/lib/validation/updateAccountValidation';
 import Image from 'next/image';
 import { deleteAccount, updateAccount } from '@/lib/actions/user.actions';
-import BigLoaderScreen from '../BigLoaderScreen';
 
 interface UpdateAccountFormProps {
   user: UserType;
@@ -53,7 +52,6 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
     user?.image || '/default-avatar.png'
   );
   const [file, setFile] = useState<File | null>(null);
-  const formRef = useRef<HTMLFormElement>(null);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files) return;
@@ -111,7 +109,6 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
       formData.append('firstName', values.firstName);
       formData.append('lastName', values.lastName);
       formData.append('nativeLanguage', values.nativeLanguage);
-
       await updateAccount(formData);
       toast.success('Account updated successfully');
     } catch (e: any) {
@@ -125,7 +122,6 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
   return (
     <Form {...form}>
       <form
-        ref={formRef}
         onSubmit={form.handleSubmit(onSubmit)}
         className='flex-center-col gap-4 p-1 rounded-md text-black'
       >
@@ -288,12 +284,11 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
         {/*  */}
         <div className='w-full flex items-center justify-around'>
           <Button
-            onClick={() => formRef.current?.submit()}
             disabled={loading}
             className='flex items-center gap-1 bg-brown hover:bg-brown/75'
             type='submit'
           >
-            <p>Save</p>
+            <p>{loading ? 'Saving...' : 'Save'}</p>
             {loading && (
               <span>
                 <Loader2 size={16} className='animate-spin' />
@@ -304,7 +299,7 @@ export default function UpdateAccountForm({ user }: UpdateAccountFormProps) {
           <AlertDialog>
             <AlertDialogTrigger className='bg-white text-black p-2 rounded-md'>
               <p className='flex-center gap-1 '>
-                <span>Delete account</span>
+                <span>{loading ? 'Loading...' : 'Delete account'}</span>
                 {!loading && (
                   <span>
                     <UserRoundX />

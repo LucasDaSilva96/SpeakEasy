@@ -21,7 +21,7 @@ export default function Footer() {
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5, type: 'spring' }}
       exit={{ y: 100, opacity: 0 }}
-      className='mt-auto relative flex-center pb-0.5'
+      className=' relative flex-center pb-0.5'
     >
       <Dock
         magnification={60}

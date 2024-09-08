@@ -317,18 +317,20 @@ export const updateAccount = async (formData: FormData) => {
         const compressedImage = await sharp(buffer).resize(200, 200).toBuffer();
         image = new File([compressedImage], image.name, { type: image.type });
       }
+
       const { error } = await supabase.storage
         .from('avatars')
-        .upload(`images/${user.id}`, image, {
+        .upload(`images/${user.id}.${image.type.split('/')[1]}`, image, {
           upsert: true,
-          contentType: image.type,
         });
 
       if (error) throw new Error(error.message);
 
       const { data: fileData } = await supabase.storage
         .from('avatars')
-        .getPublicUrl(`images/${user.id}`);
+        .getPublicUrl(`images/${user.id}.${image.type.split('/')[1]}`);
+
+      if (!fileData) throw new Error('Error uploading image');
 
       await supabase
         .from('users')
@@ -347,6 +349,8 @@ export const updateAccount = async (formData: FormData) => {
         last_name: formData.get('lastName') as string,
       })
       .eq('id', user.id);
+
+    revalidatePath('/dashboard', 'layout');
   } catch (e: any) {
     console.log(e);
     throw new Error(e.message);

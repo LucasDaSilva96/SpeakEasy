@@ -13,12 +13,14 @@ import { Loader2, LucideMailMinus } from 'lucide-react';
 import { Button } from './ui/button';
 import { TooltipComponent } from './ToolTipComponent';
 import { deleteConversation } from '@/lib/actions/user.actions';
+import { unstable_noStore } from 'next/cache';
 
 export default function UserConversationBox({
   conversation,
 }: {
   conversation: Conversation;
 }) {
+  unstable_noStore();
   const lastMessage = conversation.messages[conversation.messages.length - 1];
   const [translatedMessage, setTranslatedMessage] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -60,7 +62,7 @@ export default function UserConversationBox({
         toast.error('Error translating message');
       }
     })();
-  }, [conversation.messages.length]);
+  }, [lastMessage]);
 
   if (!conversation.messages || conversation.messages.length === 0) return null;
 

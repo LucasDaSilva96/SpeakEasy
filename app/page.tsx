@@ -1,12 +1,20 @@
-import { createClient_server } from '@/lib/supabase/server';
+import { createClient_browser } from '@/lib/supabase/client';
 import { redirect } from 'next/navigation';
+import toast from 'react-hot-toast';
+
+export const dynamic = 'force-dynamic';
 
 export default async function Root_Page() {
-  const supabase = await createClient_server();
+  const supabase = createClient_browser();
 
-  const { data, error } = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getSession();
 
-  if (data) {
+  if (error) {
+    toast.error(error.message);
+    return redirect('/auth');
+  }
+
+  if (data.session) {
     return redirect('/dashboard');
   } else {
     return redirect('/auth');

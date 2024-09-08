@@ -20,8 +20,6 @@ import toast from 'react-hot-toast';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { resetPassword } from '@/lib/actions/login.actions';
 
-export const dynamic = 'force-dynamic';
-
 const passwordSchema = z
   .object({
     password: z.string().min(8),

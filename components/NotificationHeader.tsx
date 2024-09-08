@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { AlertCircleIcon, Bell, Loader2, SmilePlusIcon } from 'lucide-react';
+import { Bell, Loader2 } from 'lucide-react';
 import {
   Drawer,
   DrawerClose,
@@ -20,8 +20,10 @@ import {
 } from '@/lib/actions/user.actions';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 export default function NotificationHeader() {
+  const url = usePathname();
   const [friendRequests, setFriendRequests] = React.useState<UserType[]>([]);
   const [loading, setLoading] = React.useState(false);
 
@@ -48,7 +50,7 @@ export default function NotificationHeader() {
         toast.error(e.message);
       }
     })();
-  }, []);
+  }, [url]);
 
   if (friendRequests.length === 0) return null;
 

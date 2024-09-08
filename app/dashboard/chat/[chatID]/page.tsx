@@ -4,8 +4,6 @@ import { createOrGetConversation } from '@/lib/actions/message.actions';
 import { getUser } from '@/lib/actions/user.actions';
 import { Loader2Icon } from 'lucide-react';
 
-export const revalidate = 10;
-
 export default async function Chat_Page({
   params,
 }: {

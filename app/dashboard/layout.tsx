@@ -9,7 +9,6 @@ export const metadata: Metadata = {
   description:
     'A chat app for everyone and from everywhere. SpeakEasy is a chat app that allows you to chat with anyone from anywhere in the world. It is a simple and easy-to-use chat app that allows you to chat with anyone from anywhere in the world.',
 };
-export const dynamic = 'force-dynamic';
 
 export default async function DashboardLayout({
   children,
@@ -51,9 +50,11 @@ export default async function DashboardLayout({
           },
         }}
       />
-      <div className='w-full h-screen flex flex-col relative bg-black text-white'>
+      <div className='w-full h-screen relative bg-black text-white'>
         <Header user={user} />
         {children}
+      </div>
+      <div className='fixed bottom-1 w-full flex-center bg-black text-white z-[50]'>
         <Footer />
       </div>
     </>

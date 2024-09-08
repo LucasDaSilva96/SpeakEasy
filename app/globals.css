@@ -64,7 +64,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground overflow-x-hidden;
+    @apply bg-background text-foreground overflow-hidden h-[100dvh] w-full relative;
   }
 }
 

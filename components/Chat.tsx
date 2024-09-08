@@ -137,7 +137,7 @@ export default function Chat({ friend, user, conversationID }: ChatProps) {
       {isMounted && <BigLoaderScreen />}
       <header className='w-full flex items-center justify-between'>
         <div className='flex items-center gap-1.5 rounded-xl shadow-sm bg-brown py-1 px-4'>
-          <div className='w-12 h-12 relative rounded-full overflow-clip'>
+          <div className='w-10 h-10 relative rounded-full overflow-clip'>
             <Image
               src={friend?.image || '/default-avatar.png'}
               alt={friend?.first_name + 'profile image'}
@@ -174,7 +174,7 @@ export default function Chat({ friend, user, conversationID }: ChatProps) {
           </TooltipComponent>
         )}
       </header>
-      <div className='w-full p-1 h-[45dvh] border border-brown rounded-md overflow-y-auto  mt-2 flex flex-col gap-2'>
+      <div className='w-full p-2 h-[44dvh] border border-brown rounded-md overflow-y-auto mt-1 flex flex-col gap-2'>
         {messages.map((msg, i) => (
           <div
             key={i}
@@ -209,7 +209,7 @@ export default function Chat({ friend, user, conversationID }: ChatProps) {
         ))}
       </div>
       {friend.first_name !== 'User no longer exists' && (
-        <div className='flex-center-col w-full gap-2 mt-4'>
+        <div className='flex-center-col w-full gap-2 mt-2'>
           <Textarea
             ref={message}
             placeholder='Type your message here.'

@@ -30,7 +30,6 @@ export default function UserCard({
             transition={{
               duration: 0.3,
               type: 'spring',
-              delay: i * 0.2 > 1 ? 1 : i * 0.2,
             }}
             className={
               !flex_row ? 'flex-center-col relative' : 'flex-center relative'

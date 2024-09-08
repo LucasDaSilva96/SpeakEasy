@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function loading() {
   return (
-    <div className='absolute z-[200] inset-0 bg-black/10 backdrop-blur-md flex-center'>
+    <div className='absolute z-[200] h-screen w-full bg-black/10 backdrop-blur-md flex-center'>
       <Loader2Icon size={50} className='text-blue animate-spin' />
     </div>
   );
