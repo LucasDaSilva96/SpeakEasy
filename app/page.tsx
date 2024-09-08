@@ -2,8 +2,6 @@ import { createClient_browser } from '@/lib/supabase/client';
 import { redirect } from 'next/navigation';
 import toast from 'react-hot-toast';
 
-export const dynamic = 'force-dynamic';
-
 export default async function Root_Page() {
   const supabase = createClient_browser();
 

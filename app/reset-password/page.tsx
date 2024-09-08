@@ -13,12 +13,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Loader2 } from 'lucide-react';
 
 import toast from 'react-hot-toast';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { resetPassword } from '@/lib/actions/login.actions';
+import BigLoaderScreen from '@/components/BigLoaderScreen';
 
 const passwordSchema = z
   .object({
@@ -36,6 +37,16 @@ const passwordSchema = z
   });
 
 export default function Reset_Password_Page() {
+  return (
+    <>
+      <Suspense fallback={<BigLoaderScreen />}>
+        <ResetPasswordForm />
+      </Suspense>
+    </>
+  );
+}
+
+const ResetPasswordForm = () => {
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
 
@@ -155,4 +166,4 @@ export default function Reset_Password_Page() {
       </div>
     </section>
   );
-}
+};

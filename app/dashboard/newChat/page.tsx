@@ -5,8 +5,6 @@ import { UserRoundPlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
-export const dynamic = 'force-dynamic';
-
 export default async function New_Chat_Page() {
   const friends = await getUserFriends();
 
