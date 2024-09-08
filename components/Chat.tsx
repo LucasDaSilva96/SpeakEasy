@@ -20,6 +20,7 @@ import BigLoaderScreen from './BigLoaderScreen';
 import { formatDate } from '@/lib/utils';
 import { revalidate } from '@/lib/revalidation';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
 
 interface ChatProps {
   user: UserType;
@@ -129,6 +130,7 @@ export default function Chat({ friend, user, conversationID }: ChatProps) {
     }
     if (isError) {
       revalidate('/dashboard');
+      return redirect('/');
     }
   }
 
